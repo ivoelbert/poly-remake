@@ -42,3 +42,5 @@ export const consoleInfo = (message: string): void => {
     `
     console.log(`%c${message}`, styles)
 }
+
+export const noop = () => {}

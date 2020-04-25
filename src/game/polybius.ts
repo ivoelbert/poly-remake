@@ -3,11 +3,13 @@ import { Stars } from './objects/stars';
 import { consoleInfo } from './utils';
 import { Center } from './objects/center';
 import { CENTER_RADIUS } from './constants';
+import { KeyboardControls } from './controls/keyboardControls';
 
 export class Polybius {
     private renderer: THREE.WebGLRenderer;
     private scene: THREE.Scene;
     private camera: THREE.PerspectiveCamera;
+    private controls: KeyboardControls;
 
     constructor() {
         // Set up the renderer
@@ -27,17 +29,29 @@ export class Polybius {
         this.camera.position.set(0, 0, CENTER_RADIUS * 2);
         this.camera.lookAt(0, 0, 0);
 
+        this.controls = new KeyboardControls();
+
         this.init();
     }
 
-    public resize = (): void => {
-        this.renderer.setSize(window.innerWidth, window.innerHeight);
-        this.camera.aspect = window.innerWidth / window.innerHeight;
-        this.camera.updateProjectionMatrix();
+    public attachListeners = (): void => {
+        this.controls.attachListeners();
+        window.addEventListener('resize', this.resize);
+    };
+
+    public dispose = (): void => {
+        this.controls.dispose();
+        window.removeEventListener('resize', this.resize);
     };
 
     public getDomElement = (): HTMLCanvasElement => {
         return this.renderer.domElement;
+    };
+
+    private resize = (): void => {
+        this.renderer.setSize(window.innerWidth, window.innerHeight);
+        this.camera.aspect = window.innerWidth / window.innerHeight;
+        this.camera.updateProjectionMatrix();
     };
 
     private init = (): void => {

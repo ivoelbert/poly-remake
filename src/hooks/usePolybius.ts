@@ -8,9 +8,9 @@ type CallbackRef = (element: HTMLElement | null) => void;
 
 export const usePolybius = (): CallbackRef => {
     useEffect(() => {
-        window.addEventListener('resize', polybius.resize);
+        polybius.attachListeners();
 
-        return () => window.removeEventListener('resize', polybius.resize);
+        return () => polybius.dispose();
     }, []);
 
     const callbackRef = (element: HTMLElement | null): void => {
