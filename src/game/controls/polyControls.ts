@@ -1,3 +1,4 @@
+import { MathUtils } from '../utils';
 
 // All posible inputs
 export enum Movements {
@@ -28,6 +29,18 @@ export const getIdleMoveState = (): MoveState => ({
     [Movements.rollLeft]: 0,
     [Movements.rollRight]: 0,
     [Movements.shoot]: 0,
+});
+
+export const lerpMoveStates = (moveState1: MoveState, moveState2: MoveState, factor: number): MoveState => ({
+    [Movements.up]: MathUtils.lerp(moveState1[Movements.up], moveState2[Movements.up], factor),
+    [Movements.down]: MathUtils.lerp(moveState1[Movements.down], moveState2[Movements.down], factor),
+    [Movements.left]: MathUtils.lerp(moveState1[Movements.left], moveState2[Movements.left], factor),
+    [Movements.right]: MathUtils.lerp(moveState1[Movements.right], moveState2[Movements.right], factor),
+    [Movements.forwards]: MathUtils.lerp(moveState1[Movements.forwards], moveState2[Movements.forwards], factor),
+    [Movements.backwards]: MathUtils.lerp(moveState1[Movements.backwards], moveState2[Movements.backwards], factor),
+    [Movements.rollLeft]: MathUtils.lerp(moveState1[Movements.rollLeft], moveState2[Movements.rollLeft], factor),
+    [Movements.rollRight]: MathUtils.lerp(moveState1[Movements.rollRight], moveState2[Movements.rollRight], factor),
+    [Movements.shoot]: moveState2[Movements.shoot],
 });
 
 // All controls must expost a move state

@@ -1,44 +1,49 @@
 import * as THREE from 'three';
-import { PolyControls, Movements } from './polyControls';
+import { PolyControls, Movements, MoveState, getIdleMoveState, lerpMoveStates } from './polyControls';
 import { PolyClock } from '../clock/PolyClock';
 import { MAX_RADIUS, MIN_RADIUS } from '../constants';
 
 /**
  * Transforms an object based on the supplied controls
  */
-
 const MOVEMENT_EPSILON = 0.00001;
 export class ObjectController {
     private clock: PolyClock;
-    private objectRadius: number;
+    private moveState: MoveState;
 
     private orbitSpeed: number;
     private rollSpeed: number;
     private depthSpeed: number;
+    private inertiaFactor: number;
 
     private matrix: THREE.Matrix4;
     private position: THREE.Vector3;
+    private objectRadius: number;
 
     constructor(private controls: PolyControls, private object: THREE.Object3D) {
         this.clock = PolyClock.getInstance();
-        this.objectRadius = MAX_RADIUS;
+        this.moveState = getIdleMoveState();
 
-        this.orbitSpeed = 1;
-        this.rollSpeed = 1;
+        this.orbitSpeed = 1.5;
+        this.rollSpeed = 1.5;
         this.depthSpeed = 10;
+        this.inertiaFactor = 0.05;
 
         this.matrix = new THREE.Matrix4();
         this.position = this.object.position.clone();
+        this.objectRadius = MAX_RADIUS;
 
         this.update();
     }
 
     public update = (): void => {
         const delta = this.clock.delta;
-        const moveState = this.controls.moveState;
+
+        // Movement inertia
+        this.moveState = lerpMoveStates(this.moveState, this.controls.moveState, this.inertiaFactor);
 
         // Forwards/backwards
-        const depthMovement = moveState[Movements.backwards] - moveState[Movements.forwards];
+        const depthMovement = this.moveState[Movements.backwards] - this.moveState[Movements.forwards];
         if (Math.abs(depthMovement) > MOVEMENT_EPSILON) {
             const zOffset = depthMovement * this.depthSpeed * delta;
 
@@ -51,18 +56,13 @@ export class ObjectController {
             }
         }
 
-        // Orbit
-        const verticalOrbit = moveState[Movements.up] - moveState[Movements.down];
-        const horizontalOrbit = moveState[Movements.right] - moveState[Movements.left];
-        const roll = moveState[Movements.rollRight] - moveState[Movements.rollLeft];
+        // Orbit and roll. Dark linear algebra magic happening here.
+        const verticalOrbit = this.moveState[Movements.up] - this.moveState[Movements.down];
+        const horizontalOrbit = this.moveState[Movements.right] - this.moveState[Movements.left];
+        const roll = this.moveState[Movements.rollRight] - this.moveState[Movements.rollLeft];
 
-        const orbitVector = new THREE.Vector2(verticalOrbit, horizontalOrbit);
-        if (orbitVector.lengthSq() > 0) {
-            orbitVector.normalize();
-        }
-
-        const xrot = orbitVector.x * this.orbitSpeed * delta;
-        const yrot = orbitVector.y * this.orbitSpeed * delta;
+        const xrot = verticalOrbit * this.orbitSpeed * delta;
+        const yrot = horizontalOrbit * this.orbitSpeed* delta;
         const zrot = roll * this.rollSpeed * delta;
 
         const xAxis = new THREE.Vector3();
@@ -85,6 +85,7 @@ export class ObjectController {
         // Update the actual object
         this.object.position.copy(this.position);
 
+        // Very important: Make the object look at the center and update its up vector
         const upvec = new THREE.Vector3(0, 1, 0);
         upvec.applyMatrix4(this.matrix);
         this.object.up.copy(upvec);
