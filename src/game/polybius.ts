@@ -2,14 +2,20 @@ import * as THREE from 'three';
 import { Stars } from './objects/stars';
 import { consoleInfo } from './utils';
 import { Center } from './objects/center';
-import { CENTER_RADIUS } from './constants';
 import { KeyboardControls } from './controls/keyboardControls';
+import { PolyClock } from './clock/PolyClock';
+import { ObjectController } from './controls/objectController';
+import { PolyShip } from './objects/ship';
+import { FollowCamera } from './objects/followCamera';
 
 export class Polybius {
     private renderer: THREE.WebGLRenderer;
     private scene: THREE.Scene;
-    private camera: THREE.PerspectiveCamera;
+    private clock: PolyClock;
+    private camera: FollowCamera;
     private controls: KeyboardControls;
+    private objectController: ObjectController;
+    private ship: PolyShip;
 
     constructor() {
         // Set up the renderer
@@ -20,18 +26,32 @@ export class Polybius {
         this.scene = new THREE.Scene();
         this.scene.fog = new THREE.FogExp2(0x000000, 0.000025);
 
-        // Set up an ambient light
+        // Set up the clock
+        this.clock = PolyClock.getInstance();
+
+        // Set up the ship
+        this.ship = new PolyShip();
+        this.scene.add(this.ship.mesh);
+
+        // Set camera
+        this.camera = new FollowCamera(this.ship.mesh);
+
+        // Some ambient light
         const light = new THREE.AmbientLight(0xffffff);
         this.scene.add(light);
 
-        // Set camera
-        this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        this.camera.position.set(0, 0, CENTER_RADIUS * 2);
-        this.camera.lookAt(0, 0, 0);
+        const stars = new Stars();
+        this.scene.add(stars.mesh);
+
+        const center = new Center();
+        this.scene.add(center.mesh);
 
         this.controls = new KeyboardControls();
+        this.objectController = new ObjectController(this.controls, this.ship.mesh);
 
-        this.init();
+        // Start the render loop!
+        consoleInfo('Game started!');
+        this.animate();
     }
 
     public attachListeners = (): void => {
@@ -54,20 +74,12 @@ export class Polybius {
         this.camera.updateProjectionMatrix();
     };
 
-    private init = (): void => {
-        const stars = new Stars();
-        this.scene.add(stars.mesh);
-
-        const center = new Center();
-        this.scene.add(center.mesh);
-
-        // Start the render loop!
-        consoleInfo('Game started!');
-        this.animate();
-    };
-
     private animate = (): void => {
         requestAnimationFrame(this.animate);
+        this.clock.tick();
+
+        this.objectController.update();
+        this.camera.update();
 
         this.renderer.render(this.scene, this.camera);
     };

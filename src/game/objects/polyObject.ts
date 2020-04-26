@@ -1,5 +1,5 @@
 import * as THREE from 'three';
 
-export interface polyObject {
+export interface PolyObject {
     mesh: THREE.Object3D;
 }

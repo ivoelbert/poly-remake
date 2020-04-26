@@ -1,9 +1,9 @@
 import * as THREE from 'three';
 import { repeat, MathUtils } from '../utils';
 import { CENTER_RADIUS } from '../constants';
-import { polyObject } from './polyObject';
+import { PolyObject } from './polyObject';
 
-export class Stars implements polyObject {
+export class Stars implements PolyObject {
     public mesh: THREE.Group;
 
     constructor() {
