@@ -1,4 +1,6 @@
 import * as THREE from 'three';
+import {TOO_FAR_TO_CARE} from './constants'
+
 
 type RepeatFunction = (index: number) => void;
 export const repeat = (times: number, f: RepeatFunction) => {
@@ -44,3 +46,8 @@ export const consoleInfo = (message: string): void => {
 }
 
 export const noop = () => {}
+
+
+
+export const tooFarFromCenter = (point: THREE.Vector3) => 
+    point.length() > TOO_FAR_TO_CARE 

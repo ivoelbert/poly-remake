@@ -15,7 +15,6 @@ export class Center implements PolyObject {
         });
 
         const centerMesh = new THREE.Mesh(geometry, material);
-
         this.mesh.add(centerMesh);
     }
 }
