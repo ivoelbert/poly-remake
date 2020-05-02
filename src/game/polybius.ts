@@ -7,9 +7,10 @@ import { PolyClock } from './clock/PolyClock';
 import { ObjectController } from './controls/objectController';
 import { PolyShip } from './objects/ship';
 import { FollowCamera } from './objects/followCamera';
+import { PolyRenderer } from './renderer';
 
 export class Polybius {
-    private renderer: THREE.WebGLRenderer;
+    private renderer: PolyRenderer;
     private scene: THREE.Scene;
     private clock: PolyClock;
     private camera: FollowCamera;
@@ -18,10 +19,6 @@ export class Polybius {
     private ship: PolyShip;
 
     constructor() {
-        // Set up the renderer
-        this.renderer = new THREE.WebGLRenderer();
-        this.renderer.setSize(window.innerWidth, window.innerHeight);
-
         // Set up the scene
         this.scene = new THREE.Scene();
         this.scene.fog = new THREE.FogExp2(0x000000, 0.000025);
@@ -33,8 +30,12 @@ export class Polybius {
         this.ship = new PolyShip();
         this.scene.add(this.ship.mesh);
 
-        // Set camera
+        // Set up camera
         this.camera = new FollowCamera(this.ship.mesh);
+
+        // Set up the renderer
+        this.renderer = new PolyRenderer(this.scene, this.camera);
+        this.renderer.resize();
 
         // Some ambient light
         const light = new THREE.AmbientLight(0xffffff);
@@ -65,11 +66,11 @@ export class Polybius {
     };
 
     public getDomElement = (): HTMLCanvasElement => {
-        return this.renderer.domElement;
+        return this.renderer.getDomElement();
     };
 
     private resize = (): void => {
-        this.renderer.setSize(window.innerWidth, window.innerHeight);
+        this.renderer.resize();
         this.camera.aspect = window.innerWidth / window.innerHeight;
         this.camera.updateProjectionMatrix();
     };
@@ -82,6 +83,6 @@ export class Polybius {
         this.objectController.update();
         this.camera.update();
 
-        this.renderer.render(this.scene, this.camera);
+        this.renderer.render();
     };
 }

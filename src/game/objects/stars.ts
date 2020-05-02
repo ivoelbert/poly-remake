@@ -33,7 +33,7 @@ export class Stars implements PolyObject {
 
         repeat(1000, (i: number) => {
             const vertex = new THREE.Vector3(MathUtils.randFloat(-1, 1), MathUtils.randFloat(-1, 1), MathUtils.randFloat(-1, 1));
-            const distance = MathUtils.randFloat(CENTER_RADIUS * 10, CENTER_RADIUS * 100);
+            const distance = MathUtils.randFloat(CENTER_RADIUS * 20, CENTER_RADIUS * 100);
             vertex.multiplyScalar(distance);
 
             starsGeometry.vertices.push(vertex);
