@@ -30,7 +30,7 @@ export class ObjectController {
     }
 
     // TODO: Make movement (and probably followCamera) frame independent
-    // See https://github.com/ivoelbert/poly-remake/issues/2
+    // See https://github.com/ivoelbert/poly-remake/ssues/2
     public update = (): void => {
         // Movement inertia
         this.moveState = lerpMoveStates(this.moveState, this.controls.moveState, this.inertiaFactor);
@@ -53,7 +53,7 @@ export class ObjectController {
             this.object.position.setLength(objectRadius);
         }
 
-        // Orbit adn Roll
+        // Orbit and Roll
         const xAxis = new THREE.Vector3();
         const yAxis = new THREE.Vector3();
         const zAxis = new THREE.Vector3();
