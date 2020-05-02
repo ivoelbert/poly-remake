@@ -1,0 +1,22 @@
+{
+  "files": {
+    "main.css": "/poly-remake/static/css/main.3dcb7389.chunk.css",
+    "main.js": "/poly-remake/static/js/main.416ab62c.chunk.js",
+    "main.js.map": "/poly-remake/static/js/main.416ab62c.chunk.js.map",
+    "runtime-main.js": "/poly-remake/static/js/runtime-main.d4fa136c.js",
+    "runtime-main.js.map": "/poly-remake/static/js/runtime-main.d4fa136c.js.map",
+    "static/js/2.49cf8d63.chunk.js": "/poly-remake/static/js/2.49cf8d63.chunk.js",
+    "static/js/2.49cf8d63.chunk.js.map": "/poly-remake/static/js/2.49cf8d63.chunk.js.map",
+    "index.html": "/poly-remake/index.html",
+    "precache-manifest.59e62190571452b851f9cc0a08f75357.js": "/poly-remake/precache-manifest.59e62190571452b851f9cc0a08f75357.js",
+    "service-worker.js": "/poly-remake/service-worker.js",
+    "static/css/main.3dcb7389.chunk.css.map": "/poly-remake/static/css/main.3dcb7389.chunk.css.map",
+    "static/js/2.49cf8d63.chunk.js.LICENSE.txt": "/poly-remake/static/js/2.49cf8d63.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.d4fa136c.js",
+    "static/js/2.49cf8d63.chunk.js",
+    "static/css/main.3dcb7389.chunk.css",
+    "static/js/main.416ab62c.chunk.js"
+  ]
+}
