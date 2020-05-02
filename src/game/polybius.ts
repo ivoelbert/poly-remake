@@ -1,4 +1,3 @@
-import * as THREE from 'three';
 import { Stars } from './objects/stars';
 import { consoleInfo } from './utils';
 import { Center } from './objects/center';
@@ -8,47 +7,47 @@ import { ObjectController } from './controls/objectController';
 import { PolyShip } from './objects/ship';
 import { FollowCamera } from './objects/followCamera';
 import { PolyRenderer } from './renderer';
+import { PolyScene } from './scene/PolyScene';
+import { AsteroidManager } from './asteroid/manager';
 
 export class Polybius {
     private renderer: PolyRenderer;
-    private scene: THREE.Scene;
     private clock: PolyClock;
     private camera: FollowCamera;
     private controls: KeyboardControls;
     private objectController: ObjectController;
     private ship: PolyShip;
-
+    private scene: PolyScene;
+    private asteroids: AsteroidManager
     constructor() {
         // Set up the scene
-        this.scene = new THREE.Scene();
-        this.scene.fog = new THREE.FogExp2(0x000000, 0.000025);
-
+        this.scene = PolyScene.getInstance();
         // Set up the clock
         this.clock = PolyClock.getInstance();
 
         // Set up the ship
         this.ship = new PolyShip();
-        this.scene.add(this.ship.mesh);
 
         // Set up camera
         this.camera = new FollowCamera(this.ship.mesh);
 
         // Set up the renderer
-        this.renderer = new PolyRenderer(this.scene, this.camera);
+        this.renderer = new PolyRenderer(this.scene.scene, this.camera);
         this.renderer.resize();
 
-        // Some ambient light
-        const light = new THREE.AmbientLight(0xffffff);
-        this.scene.add(light);
-
         const stars = new Stars();
-        this.scene.add(stars.mesh);
 
         const center = new Center();
-        this.scene.add(center.mesh);
+
+        this.scene.add(this.ship.mesh, stars.mesh, center.mesh);
 
         this.controls = new KeyboardControls();
-        this.objectController = new ObjectController(this.controls, this.ship.mesh);
+        this.objectController = new ObjectController(
+            this.controls,
+            this.ship.mesh
+        );
+
+        this.asteroids = new AsteroidManager()
 
         // Start the render loop!
         consoleInfo('Game started!');
@@ -81,8 +80,11 @@ export class Polybius {
         this.clock.tick();
 
         this.objectController.update();
+
         this.camera.update();
 
+        this.asteroids.update()
+        
         this.renderer.render();
     };
 }
