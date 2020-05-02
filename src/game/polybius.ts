@@ -74,6 +74,7 @@ export class Polybius {
         this.camera.updateProjectionMatrix();
     };
 
+    // This function represents a frame. It's called once for every frame.
     private animate = (): void => {
         requestAnimationFrame(this.animate);
         this.clock.tick();
