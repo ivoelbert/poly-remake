@@ -4,7 +4,7 @@ import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPa
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
 
 const BLOOM_PARAMS = {
-    exposure: 1.1,
+    exposure: 1.05,
     bloomStrength: 1.2,
     bloomThreshold: 0,
     bloomRadius: 0,
