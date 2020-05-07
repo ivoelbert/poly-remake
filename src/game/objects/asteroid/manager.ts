@@ -1,7 +1,7 @@
 import { Vector3 } from 'three';
 import { Asteroid } from './asteroid';
 import { PolyScene } from '../../scene/PolyScene';
-import { repeat } from '../../utils';
+import { repeat, getDumpster } from '../../utils';
 import { ASTEROIDS_IN_SCENE, MIN_RADIUS } from '../../constants';
 
 export interface Manager {
@@ -22,7 +22,9 @@ export class AsteroidManager implements Manager {
         this.scene = PolyScene.getInstance();
 
         repeat(ASTEROIDS_IN_SCENE, (_) => {
-            this.idleObjects.add(new Asteroid(this.drop));
+            const asteroid = new Asteroid(this.drop);
+            asteroid.mesh.position.copy(getDumpster());
+            this.idleObjects.add(asteroid);
         });
 
         this.idleObjects.forEach((object) => this.scene.add(object.mesh));
@@ -48,6 +50,7 @@ export class AsteroidManager implements Manager {
     };
 
     public drop = (asteroidToDelete: Asteroid) => {
+        asteroidToDelete.mesh.position.copy(getDumpster());
         this.liveObjects.delete(asteroidToDelete);
         this.idleObjects.add(asteroidToDelete);
     };

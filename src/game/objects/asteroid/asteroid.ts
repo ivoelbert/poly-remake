@@ -23,8 +23,6 @@ export class Asteroid implements PolyObject {
         this.normal = new Vector3(0, 1, 0);
         this.mesh = new THREE.Mesh(geometry, material);
 
-        this.mesh.position.copy(getDumpster());
-
         this.angularVelocity = 1;
         this.radialVelocity = 1;
         this.clock = PolyClock.getInstance();
@@ -48,7 +46,6 @@ export class Asteroid implements PolyObject {
         this.mesh.position.setLength(currentLength + lengthOffset);
 
         if (tooFarFromCenter(this.mesh.position)) {
-            this.mesh.position.copy(getDumpster());
             this.drop();
         }
     };
