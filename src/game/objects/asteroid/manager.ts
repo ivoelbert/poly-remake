@@ -3,15 +3,9 @@ import { Asteroid } from './asteroid';
 import { PolyScene } from '../../scene/PolyScene';
 import { repeat, getDumpster } from '../../utils';
 import { ASTEROIDS_IN_SCENE, MIN_RADIUS } from '../../constants';
+import { Manager } from '../manager';
 
-export interface Manager {
-    spawn: (position: Vector3, normal: Vector3) => void;
-    drop: (asteroid: Asteroid) => void;
-    update: () => void;
-    dispose: () => void;
-}
-
-export class AsteroidManager implements Manager {
+export class AsteroidManager implements Manager<Asteroid> {
     private idleObjects: Set<Asteroid>;
     private liveObjects: Set<Asteroid>;
     private scene: PolyScene;

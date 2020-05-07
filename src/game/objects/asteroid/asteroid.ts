@@ -1,9 +1,9 @@
 import * as THREE from 'three';
 import { PolyObject } from '../polyObject';
-import { TOO_FAR_TO_CARE } from '../../constants';
 import { Vector3 } from 'three';
 import { PolyClock } from '../../clock/PolyClock';
-import { tooFarFromCenter, getDumpster } from '../../utils';
+import { tooFarFromCenter } from '../../utils';
+import { DropFunction } from '../manager';
 
 export class Asteroid implements PolyObject {
     public mesh: THREE.Object3D;
@@ -13,7 +13,7 @@ export class Asteroid implements PolyObject {
     private radialVelocity: number;
     private clock: PolyClock;
 
-    constructor(dropAsteroid: (Asteroid: Asteroid) => void) {
+    constructor(dropAsteroid: DropFunction<Asteroid>) {
         const geometry = new THREE.DodecahedronBufferGeometry(1, 1);
         const material = new THREE.MeshBasicMaterial({
             color: 0x2bfa2b,
