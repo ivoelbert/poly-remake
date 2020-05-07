@@ -1,6 +1,5 @@
 import * as THREE from 'three';
-import {TOO_FAR_TO_CARE} from './constants'
-
+import { TOO_FAR_TO_CARE } from './constants';
 
 type RepeatFunction = (index: number) => void;
 export const repeat = (times: number, f: RepeatFunction) => {
@@ -11,6 +10,13 @@ export const repeat = (times: number, f: RepeatFunction) => {
 
 export const MathUtils = THREE.MathUtils;
 
+export const randomVector3 = (): THREE.Vector3 => {
+    return new THREE.Vector3(Math.random(), Math.random(), Math.random());
+};
+
+export const getOrigin = (): THREE.Vector3 => {
+    return new THREE.Vector3(0, 0, 0);
+};
 export type nil = undefined | null;
 
 export const isNil = (value: any): value is nil => {
@@ -41,13 +47,10 @@ export const consoleInfo = (message: string): void => {
         font-size: 14px;
         text-align: center;
         font-weight: 800;
-    `
-    console.log(`%c${message}`, styles)
-}
+    `;
+    console.log(`%c${message}`, styles);
+};
 
-export const noop = () => {}
+export const noop = () => {};
 
-
-
-export const tooFarFromCenter = (point: THREE.Vector3) => 
-    point.length() > TOO_FAR_TO_CARE 
+export const tooFarFromCenter = (point: THREE.Vector3) => point.length() > TOO_FAR_TO_CARE;

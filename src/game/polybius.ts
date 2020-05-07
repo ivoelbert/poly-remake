@@ -9,6 +9,7 @@ import { FollowCamera } from './objects/followCamera';
 import { PolyRenderer } from './renderer';
 import { PolyScene } from './scene/PolyScene';
 import { AsteroidManager } from './asteroid/manager';
+import { FollowMissile } from './objects/followMissile';
 
 export class Polybius {
     private renderer: PolyRenderer;
@@ -18,7 +19,9 @@ export class Polybius {
     private objectController: ObjectController;
     private ship: PolyShip;
     private scene: PolyScene;
-    private asteroids: AsteroidManager
+    private asteroids: AsteroidManager;
+    private missile: FollowMissile;
+
     constructor() {
         // Set up the scene
         this.scene = PolyScene.getInstance();
@@ -41,13 +44,13 @@ export class Polybius {
 
         this.scene.add(this.ship.mesh, stars.mesh, center.mesh);
 
-        this.controls = new KeyboardControls();
-        this.objectController = new ObjectController(
-            this.controls,
-            this.ship.mesh
-        );
+        this.missile = new FollowMissile(this.ship.mesh);
+        this.scene.add(this.missile.mesh);
 
-        this.asteroids = new AsteroidManager()
+        this.controls = new KeyboardControls();
+        this.objectController = new ObjectController(this.controls, this.ship.mesh);
+
+        this.asteroids = new AsteroidManager();
 
         // Start the render loop!
         consoleInfo('Game started!');
@@ -82,9 +85,10 @@ export class Polybius {
         this.objectController.update();
 
         this.camera.update();
+        this.missile.update();
 
-        this.asteroids.update()
-        
+        this.asteroids.update();
+
         this.renderer.render();
     };
 }
