@@ -1,13 +1,14 @@
 import * as THREE from 'three';
-import { PolyObject } from '../objects/polyObject';
-import { TOO_FAR_TO_CARE } from '../constants';
+import { PolyObject } from '../polyObject';
+import { TOO_FAR_TO_CARE } from '../../constants';
 import { Vector3 } from 'three';
-import { PolyClock } from '../clock/PolyClock';
+import { PolyClock } from '../../clock/PolyClock';
+import { tooFarFromCenter, getDumpster } from '../../utils';
 
 export class Asteroid implements PolyObject {
     public mesh: THREE.Object3D;
     private normal: Vector3;
-    private drop: (asteroid: Asteroid) => void;
+    private drop: () => void;
     private angularVelocity: number;
     private radialVelocity: number;
     private clock: PolyClock;
@@ -21,19 +22,13 @@ export class Asteroid implements PolyObject {
 
         this.normal = new Vector3(0, 1, 0);
         this.mesh = new THREE.Mesh(geometry, material);
-        
-        const initialPosition = new Vector3(
-            TOO_FAR_TO_CARE,
-            TOO_FAR_TO_CARE,
-            TOO_FAR_TO_CARE
-        );
-        
-        this.mesh.position.set(initialPosition.x, initialPosition.y, initialPosition.z)
+
+        this.mesh.position.copy(getDumpster());
 
         this.angularVelocity = 1;
         this.radialVelocity = 1;
-        this.drop = dropAsteroid;
         this.clock = PolyClock.getInstance();
+        this.drop = () => dropAsteroid(this);
     }
 
     public spawn = (position: Vector3, normal: Vector3): void => {
@@ -52,9 +47,9 @@ export class Asteroid implements PolyObject {
         const lengthOffset = this.radialVelocity * delta;
         this.mesh.position.setLength(currentLength + lengthOffset);
 
-        if(this.mesh.position.length() > TOO_FAR_TO_CARE){
-            this.mesh.position.set(TOO_FAR_TO_CARE, TOO_FAR_TO_CARE, TOO_FAR_TO_CARE)
-            this.drop(this)
+        if (tooFarFromCenter(this.mesh.position)) {
+            this.mesh.position.copy(getDumpster());
+            this.drop();
         }
     };
 }

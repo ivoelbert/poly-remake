@@ -8,7 +8,7 @@ import { PolyShip } from './objects/ship';
 import { FollowCamera } from './objects/followCamera';
 import { PolyRenderer } from './renderer';
 import { PolyScene } from './scene/PolyScene';
-import { AsteroidManager } from './asteroid/manager';
+import { AsteroidManager } from './objects/asteroid/manager';
 import { FollowMissile } from './objects/followMissile';
 
 export class Polybius {
@@ -48,7 +48,10 @@ export class Polybius {
         this.scene.add(this.missile.mesh);
 
         this.controls = new KeyboardControls();
-        this.objectController = new ObjectController(this.controls, this.ship.mesh);
+        this.objectController = new ObjectController(
+            this.controls,
+            this.ship.mesh
+        );
 
         this.asteroids = new AsteroidManager();
 

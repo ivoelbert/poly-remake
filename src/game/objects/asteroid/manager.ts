@@ -1,8 +1,8 @@
 import { Vector3 } from 'three';
 import { Asteroid } from './asteroid';
-import { PolyScene } from '../scene/PolyScene';
-import { repeat } from '../utils';
-import { ASTEROIDS_IN_SCENE, MIN_RADIUS } from '../constants';
+import { PolyScene } from '../../scene/PolyScene';
+import { repeat } from '../../utils';
+import { ASTEROIDS_IN_SCENE, MIN_RADIUS } from '../../constants';
 
 export interface Manager {
     spawn: (position: Vector3, normal: Vector3) => void;
@@ -31,7 +31,6 @@ export class AsteroidManager implements Manager {
 
         this.spawn(initialPosition, initialNormal);
 
-
         // For debug only
         setInterval(() => this.spawn(initialPosition, initialNormal), 10000);
     }
@@ -52,9 +51,11 @@ export class AsteroidManager implements Manager {
         this.liveObjects.delete(asteroidToDelete);
         this.idleObjects.add(asteroidToDelete);
     };
+
     public update = () => {
         this.liveObjects.forEach((object) => object.update());
     };
+
     public dispose = () => {
         this.liveObjects.forEach((object) => this.scene.remove(object.mesh));
         this.idleObjects.forEach((object) => this.scene.remove(object.mesh));

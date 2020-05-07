@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { TOO_FAR_TO_CARE } from './constants';
+import { TOO_FAR_TO_CARE, CENTER_RADIUS } from './constants';
 
 type RepeatFunction = (index: number) => void;
 export const repeat = (times: number, f: RepeatFunction) => {
@@ -17,6 +17,17 @@ export const randomVector3 = (): THREE.Vector3 => {
 export const getOrigin = (): THREE.Vector3 => {
     return new THREE.Vector3(0, 0, 0);
 };
+
+// The dumpster has to be very, very far from the center so the camera doesn't catch it.
+const DUMPSTER_POSITION = CENTER_RADIUS * 1000;
+export const getDumpster = (): THREE.Vector3 => {
+    return new THREE.Vector3(
+        DUMPSTER_POSITION,
+        DUMPSTER_POSITION,
+        DUMPSTER_POSITION
+    );
+};
+
 export type nil = undefined | null;
 
 export const isNil = (value: any): value is nil => {
@@ -53,4 +64,5 @@ export const consoleInfo = (message: string): void => {
 
 export const noop = () => {};
 
-export const tooFarFromCenter = (point: THREE.Vector3) => point.length() > TOO_FAR_TO_CARE;
+export const tooFarFromCenter = (point: THREE.Vector3) =>
+    point.length() > TOO_FAR_TO_CARE;

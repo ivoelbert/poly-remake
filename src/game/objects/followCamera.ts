@@ -20,9 +20,15 @@ export class FollowCamera extends THREE.PerspectiveCamera {
     // See https://github.com/ivoelbert/poly-remake/issues/2
     update = (): void => {
         const followedPosition = this.followedObject.position.clone();
-        followedPosition.add(followedPosition.clone().normalize().multiplyScalar(this.distance));
+        followedPosition.add(
+            followedPosition.clone().normalize().multiplyScalar(this.distance)
+        );
 
-        const newPosition = new THREE.Vector3().lerpVectors(this.position, followedPosition, this.inertiaFactor);
+        const newPosition = new THREE.Vector3().lerpVectors(
+            this.position,
+            followedPosition,
+            this.inertiaFactor
+        );
 
         this.position.copy(newPosition);
         this.up.copy(this.followedObject.up);

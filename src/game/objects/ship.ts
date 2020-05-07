@@ -43,7 +43,10 @@ export class PolyShip implements PolyObject {
             ...backRight,
         ]);
 
-        geometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3));
+        geometry.setAttribute(
+            'position',
+            new THREE.BufferAttribute(vertices, 3)
+        );
 
         return geometry;
     };
