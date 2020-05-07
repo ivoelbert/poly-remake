@@ -1,5 +1,11 @@
 import * as THREE from 'three';
-import { PolyControls, Movements, MoveState, getIdleMoveState, lerpMoveStates } from './polyControls';
+import {
+    PolyControls,
+    Movements,
+    MoveState,
+    getIdleMoveState,
+    lerpMoveStates,
+} from './polyControls';
 import { PolyClock } from '../clock/PolyClock';
 import { MAX_RADIUS, MIN_RADIUS } from '../constants';
 
@@ -33,10 +39,15 @@ export class ObjectController {
     // See https://github.com/ivoelbert/poly-remake/ssues/2
     public update = (): void => {
         // Movement inertia
-        this.moveState = lerpMoveStates(this.moveState, this.controls.moveState, this.inertiaFactor);
+        this.moveState = lerpMoveStates(
+            this.moveState,
+            this.controls.moveState,
+            this.inertiaFactor
+        );
 
         // Forwards/backwards
-        const depthMovement = this.moveState[Movements.backwards] - this.moveState[Movements.forwards];
+        const depthMovement =
+            this.moveState[Movements.backwards] - this.moveState[Movements.forwards];
         if (Math.abs(depthMovement) > MOVEMENT_EPSILON) {
             const zOffset = depthMovement * this.forwardsAndBackwardsSpeed;
 
@@ -67,7 +78,9 @@ export class ObjectController {
         const horizontalVector = yAxis.clone();
         horizontalVector.multiplyScalar(horizontalOrbit);
 
-        const directionVector = new THREE.Vector3().addVectors(verticalVector, horizontalVector).clampLength(0, 1);
+        const directionVector = new THREE.Vector3()
+            .addVectors(verticalVector, horizontalVector)
+            .clampLength(0, 1);
         const rotationAngle = directionVector.length();
 
         if (rotationAngle > MOVEMENT_EPSILON) {

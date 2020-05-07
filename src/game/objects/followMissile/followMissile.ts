@@ -1,34 +1,51 @@
 import * as THREE from 'three';
-import { PolyObject } from './polyObject';
-import { randomVector3, getOrigin, MathUtils } from '../utils';
-import { PolyClock } from '../clock/PolyClock';
+import { PolyObject } from '../polyObject';
+import { PolyClock } from '../../clock/PolyClock';
+import { randomUnitVector, MathUtils, tooFarFromCenter } from '../../utils';
+import { MissileMeshFactory } from './meshFactory';
+import { DropFunction } from '../manager';
 
 export class FollowMissile implements PolyObject {
     public mesh: THREE.Object3D;
     private direction: THREE.Vector3;
     private clock: PolyClock;
+    private drop: () => void;
 
     private angSpeed: number;
     private speed: number;
 
-    constructor(private object: THREE.Object3D, startPosition?: THREE.Vector3, direction?: THREE.Vector3) {
+    constructor(
+        private object: THREE.Object3D,
+        meshFactory: MissileMeshFactory,
+        drop: DropFunction<FollowMissile>
+    ) {
         this.clock = PolyClock.getInstance();
 
         this.angSpeed = 3;
         this.speed = 40;
 
-        this.mesh = misilMesh.clone();
-        this.mesh.position.copy(startPosition ?? getOrigin());
-        this.direction = direction ?? randomVector3();
+        this.mesh = meshFactory.buildMesh();
+        this.direction = randomUnitVector();
+
+        this.drop = () => drop(this);
+    }
+
+    public spawn = (position: THREE.Vector3, direction: THREE.Vector3): void => {
+        this.mesh.position.copy(position);
+        this.direction.copy(direction);
         this.direction.normalize();
 
         this.align();
-    }
+    };
 
     public update = (): void => {
         this.updateRotation();
         this.updatePosition();
         this.updateFlames();
+
+        if (tooFarFromCenter(this.mesh.position)) {
+            this.drop();
+        }
     };
 
     private updateRotation = (): void => {
@@ -73,32 +90,3 @@ export class FollowMissile implements PolyObject {
         this.mesh.rotateOnAxis(new THREE.Vector3(1, 0, 0), Math.PI * 0.5);
     };
 }
-
-const misilGeometry = new THREE.CylinderBufferGeometry(0.2, 0.4, 1, 6, 1);
-const misilMaterial = new THREE.MeshBasicMaterial({
-    wireframe: true,
-    color: 0xffffff,
-});
-
-const fireGeom = new THREE.ConeBufferGeometry(0.3, 1, 6);
-
-const lightFireMat = new THREE.MeshBasicMaterial({
-    wireframe: true,
-    color: 0xeeec74,
-});
-
-const darkFireMat = new THREE.MeshBasicMaterial({
-    wireframe: true,
-    color: 0xee5137,
-});
-
-const lightFire = new THREE.Mesh(fireGeom, lightFireMat);
-const darkFire = new THREE.Mesh(fireGeom, darkFireMat);
-lightFire.position.y -= 1;
-darkFire.position.y -= 1;
-lightFire.rotateX(Math.PI);
-darkFire.rotateX(Math.PI);
-
-const misilMesh = new THREE.Mesh(misilGeometry, misilMaterial);
-misilMesh.add(lightFire);
-misilMesh.add(darkFire);

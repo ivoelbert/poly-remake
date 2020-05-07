@@ -22,8 +22,7 @@ export class PolyScene {
 
     public add = (...objects: THREE.Object3D[]) => this.scene.add(...objects);
 
-    public remove = (...objects: THREE.Object3D[]) =>
-        this.scene.remove(...objects);
+    public remove = (...objects: THREE.Object3D[]) => this.scene.remove(...objects);
 
     public dispose = () => this.scene.dispose();
 }

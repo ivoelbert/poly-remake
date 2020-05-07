@@ -21,7 +21,12 @@ export class PolyRenderer {
 
         const renderScene = new RenderPass(scene, camera);
 
-        const bloomPass = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 1.5, 0.4, 0.85);
+        const bloomPass = new UnrealBloomPass(
+            new THREE.Vector2(window.innerWidth, window.innerHeight),
+            1.5,
+            0.4,
+            0.85
+        );
         bloomPass.threshold = BLOOM_PARAMS.bloomThreshold;
         bloomPass.strength = BLOOM_PARAMS.bloomStrength;
         bloomPass.radius = BLOOM_PARAMS.bloomRadius;
