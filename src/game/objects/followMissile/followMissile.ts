@@ -4,9 +4,12 @@ import { PolyClock } from '../../clock/PolyClock';
 import { randomUnitVector, MathUtils, tooFarFromCenter } from '../../utils';
 import { MissileMeshFactory } from './meshFactory';
 import { DropFunction } from '../manager';
+import { PolyHitbox } from '../hitbox';
 
 export class FollowMissile implements PolyObject {
     public mesh: THREE.Object3D;
+    public hitbox: PolyHitbox;
+
     private direction: THREE.Vector3;
     private clock: PolyClock;
     private drop: () => void;
@@ -27,6 +30,8 @@ export class FollowMissile implements PolyObject {
         this.mesh = meshFactory.buildMesh();
         this.direction = randomUnitVector();
 
+        this.hitbox = new PolyHitbox(this.mesh, meshFactory.getHitboxGeometry());
+
         this.drop = () => drop(this);
     }
 
@@ -43,9 +48,15 @@ export class FollowMissile implements PolyObject {
         this.updatePosition();
         this.updateFlames();
 
+        this.hitbox.update();
+
         if (tooFarFromCenter(this.mesh.position)) {
             this.drop();
         }
+    };
+
+    public onCollide = (who: PolyObject): void => {
+        this.drop();
     };
 
     private updateRotation = (): void => {

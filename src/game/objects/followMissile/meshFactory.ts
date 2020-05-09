@@ -3,9 +3,10 @@ import { MeshFactory } from '../meshFactory';
 
 export class MissileMeshFactory implements MeshFactory {
     private mesh: THREE.Mesh;
+    private hitboxGeometry: THREE.Geometry | THREE.BufferGeometry;
 
     constructor() {
-        const misilGeometry = new THREE.CylinderBufferGeometry(0.2, 0.4, 1, 6, 1);
+        this.hitboxGeometry = new THREE.CylinderBufferGeometry(0.2, 0.4, 1, 6, 1);
         const misilMaterial = new THREE.MeshBasicMaterial({
             wireframe: true,
             color: 0xffffff,
@@ -30,12 +31,16 @@ export class MissileMeshFactory implements MeshFactory {
         lightFire.rotateX(Math.PI);
         darkFire.rotateX(Math.PI);
 
-        this.mesh = new THREE.Mesh(misilGeometry, misilMaterial);
+        this.mesh = new THREE.Mesh(this.hitboxGeometry, misilMaterial);
         this.mesh.add(lightFire);
         this.mesh.add(darkFire);
     }
 
     public buildMesh = (): THREE.Mesh => {
         return this.mesh.clone();
+    };
+
+    public getHitboxGeometry = (): THREE.Geometry | THREE.BufferGeometry => {
+        return this.hitboxGeometry.clone();
     };
 }

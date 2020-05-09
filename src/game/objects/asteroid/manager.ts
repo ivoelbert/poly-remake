@@ -5,6 +5,7 @@ import { repeat, getDumpster, randomUnitVector, assertExists, getOne } from '../
 import { ASTEROIDS_IN_SCENE, MIN_RADIUS } from '../../constants';
 import { Manager } from '../manager';
 import { AsteroidMeshFactory } from './meshFactory';
+import { PolyCollider, Groups } from '../../collider';
 
 export class AsteroidManager implements Manager<Asteroid> {
     private idleObjects: Set<Asteroid>;
@@ -12,7 +13,7 @@ export class AsteroidManager implements Manager<Asteroid> {
     private scene: PolyScene;
     private meshFactory: AsteroidMeshFactory;
 
-    constructor() {
+    constructor(private collider: PolyCollider) {
         this.idleObjects = new Set();
         this.liveObjects = new Set();
         this.scene = PolyScene.getInstance();
@@ -41,12 +42,16 @@ export class AsteroidManager implements Manager<Asteroid> {
         this.liveObjects.add(objectToSpawn);
 
         objectToSpawn.spawn(position, normal);
+
+        this.collider.addObjectToGroup(objectToSpawn, Groups.asteroids);
     };
 
     public drop = (objectToDelete: Asteroid) => {
         objectToDelete.mesh.position.copy(getDumpster());
         this.liveObjects.delete(objectToDelete);
         this.idleObjects.add(objectToDelete);
+
+        this.collider.removeObjectFromGroup(objectToDelete, Groups.asteroids);
     };
 
     public update = () => {
