@@ -25,7 +25,7 @@ export class Asteroid implements PolyObject {
     }
 
     public spawn = (position: Vector3, normal: Vector3): void => {
-        this.mesh.position.set(position.x, position.y, position.z);
+        this.mesh.position.copy(position);
         this.normal = normal;
     };
 
@@ -41,6 +41,7 @@ export class Asteroid implements PolyObject {
         this.mesh.position.setLength(currentLength + lengthOffset);
 
         if (tooFarFromCenter(this.mesh.position)) {
+            console.log('dropping asteroid!');
             this.drop();
         }
     };

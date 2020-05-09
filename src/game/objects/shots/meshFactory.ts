@@ -1,0 +1,29 @@
+import * as THREE from 'three';
+import { MeshFactory } from '../meshFactory';
+
+export class ShotMeshFactory implements MeshFactory {
+    private mesh: THREE.Mesh;
+
+    constructor() {
+        const coreGeometry = new THREE.DodecahedronBufferGeometry(0.15);
+        const coreMaterial = new THREE.MeshBasicMaterial({
+            color: 0xfff36e,
+            wireframe: true,
+        });
+
+        const coreMesh = new THREE.Mesh(coreGeometry, coreMaterial);
+
+        const geometry = new THREE.DodecahedronBufferGeometry(0.3);
+        const material = new THREE.MeshBasicMaterial({
+            color: 0xd68400,
+            wireframe: true,
+        });
+
+        this.mesh = new THREE.Mesh(geometry, material);
+        this.mesh.add(coreMesh);
+    }
+
+    public buildMesh = (): THREE.Mesh => {
+        return this.mesh.clone();
+    };
+}

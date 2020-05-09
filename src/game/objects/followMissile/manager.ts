@@ -26,9 +26,9 @@ export class FollowMissileManager implements Manager<FollowMissile> {
         this.meshFactory = new MissileMeshFactory();
 
         repeat(MISSILES_IN_SCENE, (_) => {
-            const missile = new FollowMissile(followedObject, this.meshFactory, this.drop);
-            missile.mesh.position.copy(getDumpster());
-            this.idleObjects.add(missile);
+            const object = new FollowMissile(followedObject, this.meshFactory, this.drop);
+            object.mesh.position.copy(getDumpster());
+            this.idleObjects.add(object);
         });
 
         this.idleObjects.forEach((object) => this.scene.add(object.mesh));

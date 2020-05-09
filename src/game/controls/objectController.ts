@@ -8,6 +8,7 @@ import {
 } from './polyControls';
 import { PolyClock } from '../clock/PolyClock';
 import { MAX_RADIUS, MIN_RADIUS } from '../constants';
+import { ShotManager } from '../objects/shots/manager';
 
 /**
  * Transforms an object based on the supplied controls
@@ -17,20 +18,28 @@ const MOVEMENT_EPSILON = 0.00001;
 export class ObjectController {
     private clock: PolyClock;
     private moveState: MoveState;
+    private shotDelta: number;
 
     private orbitSpeed: number;
     private rollSpeed: number;
     private forwardsAndBackwardsSpeed: number;
     private inertiaFactor: number;
+    private shotRecoveryTime: number;
 
-    constructor(private controls: PolyControls, private object: THREE.Object3D) {
+    constructor(
+        private controls: PolyControls,
+        private object: THREE.Object3D,
+        private shots: ShotManager
+    ) {
         this.clock = PolyClock.getInstance();
         this.moveState = getIdleMoveState();
+        this.shotDelta = 0;
 
         this.orbitSpeed = 0.05;
         this.rollSpeed = 0.05;
         this.forwardsAndBackwardsSpeed = 0.5;
         this.inertiaFactor = 0.1;
+        this.shotRecoveryTime = 0.15;
 
         this.update();
     }
@@ -45,7 +54,12 @@ export class ObjectController {
             this.inertiaFactor
         );
 
-        // Forwards/backwards
+        this.updateDepth();
+        this.updateOrbit();
+        this.updateShots();
+    };
+
+    private updateDepth = (): void => {
         const depthMovement =
             this.moveState[Movements.backwards] - this.moveState[Movements.forwards];
         if (Math.abs(depthMovement) > MOVEMENT_EPSILON) {
@@ -63,8 +77,9 @@ export class ObjectController {
 
             this.object.position.setLength(objectRadius);
         }
+    };
 
-        // Orbit and Roll
+    private updateOrbit = (): void => {
         const xAxis = new THREE.Vector3();
         const yAxis = new THREE.Vector3();
         const zAxis = new THREE.Vector3();
@@ -92,5 +107,15 @@ export class ObjectController {
         yAxis.applyAxisAngle(zAxis, roll * this.rollSpeed);
         this.object.up.copy(yAxis);
         this.object.lookAt(0, 0, 0);
+    };
+
+    private updateShots = (): void => {
+        const delta = this.clock.delta;
+        this.shotDelta += delta;
+
+        if (this.shotDelta > this.shotRecoveryTime && this.moveState[Movements.shoot] === 1) {
+            this.shotDelta = 0;
+            this.shots.spawn(this.object.position);
+        }
     };
 }

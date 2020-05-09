@@ -10,6 +10,7 @@ import { PolyRenderer } from './renderer';
 import { PolyScene } from './scene/PolyScene';
 import { AsteroidManager } from './objects/asteroid/manager';
 import { FollowMissileManager } from './objects/followMissile/manager';
+import { ShotManager } from './objects/shots/manager';
 
 export class Polybius {
     private renderer: PolyRenderer;
@@ -21,6 +22,7 @@ export class Polybius {
     private scene: PolyScene;
     private asteroids: AsteroidManager;
     private missiles: FollowMissileManager;
+    private shots: ShotManager;
 
     constructor() {
         // Set up the scene
@@ -39,16 +41,16 @@ export class Polybius {
         this.renderer.resize();
 
         const stars = new Stars();
-
         const center = new Center();
 
         this.scene.add(this.ship.mesh, stars.mesh, center.mesh);
 
-        this.controls = new KeyboardControls();
-        this.objectController = new ObjectController(this.controls, this.ship.mesh);
-
         this.asteroids = new AsteroidManager();
         this.missiles = new FollowMissileManager(this.ship.mesh);
+        this.shots = new ShotManager();
+
+        this.controls = new KeyboardControls();
+        this.objectController = new ObjectController(this.controls, this.ship.mesh, this.shots);
 
         // Start the render loop!
         consoleInfo('Game started!');
@@ -87,6 +89,7 @@ export class Polybius {
 
         this.missiles.update();
         this.asteroids.update();
+        this.shots.update();
 
         this.renderer.render();
     };

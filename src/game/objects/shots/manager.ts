@@ -1,38 +1,33 @@
 import { Vector3 } from 'three';
-import { Asteroid } from './asteroid';
+import { Shot } from './shot';
 import { PolyScene } from '../../scene/PolyScene';
-import { repeat, getDumpster, randomUnitVector, assertExists, getOne } from '../../utils';
-import { ASTEROIDS_IN_SCENE, MIN_RADIUS } from '../../constants';
+import { repeat, getDumpster, getOne, assertExists } from '../../utils';
+import { SHOTS_IN_SCENE } from '../../constants';
 import { Manager } from '../manager';
-import { AsteroidMeshFactory } from './meshFactory';
+import { ShotMeshFactory } from './meshFactory';
 
-export class AsteroidManager implements Manager<Asteroid> {
-    private idleObjects: Set<Asteroid>;
-    private liveObjects: Set<Asteroid>;
+export class ShotManager implements Manager<Shot> {
+    private idleObjects: Set<Shot>;
+    private liveObjects: Set<Shot>;
     private scene: PolyScene;
-    private meshFactory: AsteroidMeshFactory;
+    private meshFactory: ShotMeshFactory;
 
     constructor() {
         this.idleObjects = new Set();
         this.liveObjects = new Set();
         this.scene = PolyScene.getInstance();
-        this.meshFactory = new AsteroidMeshFactory();
+        this.meshFactory = new ShotMeshFactory();
 
-        repeat(ASTEROIDS_IN_SCENE, (_) => {
-            const object = new Asteroid(this.meshFactory, this.drop);
+        repeat(SHOTS_IN_SCENE, (_) => {
+            const object = new Shot(this.meshFactory, this.drop);
             object.mesh.position.copy(getDumpster());
             this.idleObjects.add(object);
         });
 
         this.idleObjects.forEach((object) => this.scene.add(object.mesh));
-
-        // For debug only
-        const initialPosition = new Vector3(0, MIN_RADIUS, 0);
-        this.spawn(initialPosition, randomUnitVector());
-        setInterval(() => this.spawn(initialPosition, randomUnitVector()), 10000);
     }
 
-    public spawn = (position: Vector3, normal: Vector3) => {
+    public spawn = (position: Vector3) => {
         // If no available objects blow up. In the future we should do better.
         // A FIFO structure that drops the oldest element and spawns the new one.
         const objectToSpawn = assertExists(getOne(this.idleObjects));
@@ -40,10 +35,10 @@ export class AsteroidManager implements Manager<Asteroid> {
         this.idleObjects.delete(objectToSpawn);
         this.liveObjects.add(objectToSpawn);
 
-        objectToSpawn.spawn(position, normal);
+        objectToSpawn.spawn(position);
     };
 
-    public drop = (objectToDelete: Asteroid) => {
+    public drop = (objectToDelete: Shot) => {
         objectToDelete.mesh.position.copy(getDumpster());
         this.liveObjects.delete(objectToDelete);
         this.idleObjects.add(objectToDelete);
