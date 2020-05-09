@@ -52,7 +52,6 @@ export class Asteroid implements PolyObject {
         this.hitbox.update();
 
         if (tooFarFromCenter(this.mesh.position)) {
-            console.log('dropping asteroid!');
             this.drop();
         }
     };
