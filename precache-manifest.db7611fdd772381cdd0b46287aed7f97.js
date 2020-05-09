@@ -1,10 +1,10 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "c8175554f7b95c98165e31c8e0e90422",
+    "revision": "df375585160f32baad9488ad4e0b9928",
     "url": "/poly-remake/index.html"
   },
   {
-    "revision": "63fa4c917d2ff763a778",
+    "revision": "e1a2396744697b3ae175",
     "url": "/poly-remake/static/css/main.3dcb7389.chunk.css"
   },
   {
@@ -16,8 +16,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/poly-remake/static/js/2.5b24879c.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "63fa4c917d2ff763a778",
-    "url": "/poly-remake/static/js/main.242ab0d9.chunk.js"
+    "revision": "e1a2396744697b3ae175",
+    "url": "/poly-remake/static/js/main.a7f0c0c6.chunk.js"
   },
   {
     "revision": "2b31afe7d8a78dc89907",
