@@ -1,23 +1,23 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "034a4f42c77a5769e712e52df7551037",
+    "revision": "3a5f6a0b93af4623f8690fd62c0f53f6",
     "url": "/poly-remake/index.html"
   },
   {
-    "revision": "52fa27877279ea10ef39",
+    "revision": "fbc988bdbc99f4d9c5e0",
     "url": "/poly-remake/static/css/main.3dcb7389.chunk.css"
   },
   {
-    "revision": "fc56e77b05f4cca81ccc",
-    "url": "/poly-remake/static/js/2.49cf8d63.chunk.js"
+    "revision": "d6d0d1607aca54b79e41",
+    "url": "/poly-remake/static/js/2.21b948e4.chunk.js"
   },
   {
     "revision": "e88a3e95b5364d46e95b35ae8c0dc27d",
-    "url": "/poly-remake/static/js/2.49cf8d63.chunk.js.LICENSE.txt"
+    "url": "/poly-remake/static/js/2.21b948e4.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "52fa27877279ea10ef39",
-    "url": "/poly-remake/static/js/main.416ab62c.chunk.js"
+    "revision": "fbc988bdbc99f4d9c5e0",
+    "url": "/poly-remake/static/js/main.1e9cd055.chunk.js"
   },
   {
     "revision": "2b31afe7d8a78dc89907",
