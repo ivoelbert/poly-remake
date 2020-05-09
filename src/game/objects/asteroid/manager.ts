@@ -1,34 +1,35 @@
 import { Vector3 } from 'three';
 import { Asteroid } from './asteroid';
 import { PolyScene } from '../../scene/PolyScene';
-import { repeat, getDumpster } from '../../utils';
+import { repeat, getDumpster, randomUnitVector } from '../../utils';
 import { ASTEROIDS_IN_SCENE, MIN_RADIUS } from '../../constants';
 import { Manager } from '../manager';
+import { AsteroidMeshFactory } from './meshFactory';
 
 export class AsteroidManager implements Manager<Asteroid> {
     private idleObjects: Set<Asteroid>;
     private liveObjects: Set<Asteroid>;
     private scene: PolyScene;
+    private meshFactory: AsteroidMeshFactory;
 
     constructor() {
         this.idleObjects = new Set();
         this.liveObjects = new Set();
         this.scene = PolyScene.getInstance();
+        this.meshFactory = new AsteroidMeshFactory();
 
         repeat(ASTEROIDS_IN_SCENE, (_) => {
-            const asteroid = new Asteroid(this.drop);
+            const asteroid = new Asteroid(this.meshFactory, this.drop);
             asteroid.mesh.position.copy(getDumpster());
             this.idleObjects.add(asteroid);
         });
 
         this.idleObjects.forEach((object) => this.scene.add(object.mesh));
         const initialPosition = new Vector3(0, MIN_RADIUS, 0);
-        const initialNormal = new Vector3(1, 0, 0);
-
-        this.spawn(initialPosition, initialNormal);
+        this.spawn(initialPosition, randomUnitVector());
 
         // For debug only
-        setInterval(() => this.spawn(initialPosition, initialNormal), 10000);
+        setInterval(() => this.spawn(initialPosition, randomUnitVector()), 10000);
     }
 
     public spawn = (position: Vector3, normal: Vector3) => {

@@ -10,8 +10,8 @@ export const repeat = (times: number, f: RepeatFunction) => {
 
 export const MathUtils = THREE.MathUtils;
 
-export const randomVector3 = (): THREE.Vector3 => {
-    return new THREE.Vector3(Math.random(), Math.random(), Math.random());
+export const randomUnitVector = (): THREE.Vector3 => {
+    return new THREE.Vector3(Math.random(), Math.random(), Math.random()).normalize();
 };
 
 export const getOrigin = (): THREE.Vector3 => {
@@ -21,11 +21,7 @@ export const getOrigin = (): THREE.Vector3 => {
 // The dumpster has to be very, very far from the center so the camera doesn't catch it.
 const DUMPSTER_POSITION = CENTER_RADIUS * 1000;
 export const getDumpster = (): THREE.Vector3 => {
-    return new THREE.Vector3(
-        DUMPSTER_POSITION,
-        DUMPSTER_POSITION,
-        DUMPSTER_POSITION
-    );
+    return new THREE.Vector3(DUMPSTER_POSITION, DUMPSTER_POSITION, DUMPSTER_POSITION);
 };
 
 export type nil = undefined | null;
@@ -64,5 +60,8 @@ export const consoleInfo = (message: string): void => {
 
 export const noop = () => {};
 
-export const tooFarFromCenter = (point: THREE.Vector3) =>
-    point.length() > TOO_FAR_TO_CARE;
+export const tooFarFromCenter = (point: THREE.Vector3) => point.length() > TOO_FAR_TO_CARE;
+
+export const getOne = <T>(set: Set<T>): T | nil => {
+    return set.values().next().value;
+};
