@@ -5,6 +5,7 @@ import { repeat, getDumpster, getOne, assertExists } from '../../utils';
 import { SHOTS_IN_SCENE } from '../../constants';
 import { Manager } from '../manager';
 import { ShotMeshFactory } from './meshFactory';
+import { PolyCollider, Groups } from '../../collider';
 
 export class ShotManager implements Manager<Shot> {
     private idleObjects: Set<Shot>;
@@ -12,7 +13,7 @@ export class ShotManager implements Manager<Shot> {
     private scene: PolyScene;
     private meshFactory: ShotMeshFactory;
 
-    constructor() {
+    constructor(private collider: PolyCollider) {
         this.idleObjects = new Set();
         this.liveObjects = new Set();
         this.scene = PolyScene.getInstance();
@@ -36,12 +37,16 @@ export class ShotManager implements Manager<Shot> {
         this.liveObjects.add(objectToSpawn);
 
         objectToSpawn.spawn(position);
+
+        this.collider.addObjectToGroup(objectToSpawn, Groups.shots);
     };
 
     public drop = (objectToDelete: Shot) => {
         objectToDelete.mesh.position.copy(getDumpster());
         this.liveObjects.delete(objectToDelete);
         this.idleObjects.add(objectToDelete);
+
+        this.collider.removeObjectFromGroup(objectToDelete, Groups.shots);
     };
 
     public update = () => {

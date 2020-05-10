@@ -3,6 +3,7 @@ import { MeshFactory } from '../meshFactory';
 
 export class ShotMeshFactory implements MeshFactory {
     private mesh: THREE.Mesh;
+    private hitboxGeometry: THREE.Geometry | THREE.BufferGeometry;
 
     constructor() {
         const coreGeometry = new THREE.DodecahedronBufferGeometry(0.15);
@@ -13,17 +14,21 @@ export class ShotMeshFactory implements MeshFactory {
 
         const coreMesh = new THREE.Mesh(coreGeometry, coreMaterial);
 
-        const geometry = new THREE.DodecahedronBufferGeometry(0.3);
+        this.hitboxGeometry = new THREE.DodecahedronBufferGeometry(0.3);
         const material = new THREE.MeshBasicMaterial({
             color: 0xd68400,
             wireframe: true,
         });
 
-        this.mesh = new THREE.Mesh(geometry, material);
+        this.mesh = new THREE.Mesh(this.hitboxGeometry, material);
         this.mesh.add(coreMesh);
     }
 
     public buildMesh = (): THREE.Mesh => {
         return this.mesh.clone();
+    };
+
+    public getHitboxGeometry = (): THREE.Geometry | THREE.BufferGeometry => {
+        return this.hitboxGeometry.clone();
     };
 }

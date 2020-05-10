@@ -1,9 +1,11 @@
 import * as THREE from 'three';
-import { PolyObject } from './polyObject';
-import { MAX_RADIUS } from '../constants';
+import { PolyObject } from '../polyObject';
+import { MAX_RADIUS } from '../../constants';
+import { PolyHitbox } from '../hitbox';
 
 export class PolyShip implements PolyObject {
     public mesh: THREE.Object3D;
+    public hitbox: PolyHitbox;
 
     constructor() {
         const geometry = this.createGeometry();
@@ -15,7 +17,17 @@ export class PolyShip implements PolyObject {
 
         this.mesh = new THREE.Mesh(geometry, material);
         this.mesh.position.set(0, 0, MAX_RADIUS);
+
+        this.hitbox = new PolyHitbox(this.mesh, geometry);
     }
+
+    public update = () => {
+        this.hitbox.update();
+    };
+
+    public onCollide = (who: PolyObject): void => {
+        console.log('OH SHIT!');
+    };
 
     private createGeometry = (): THREE.BufferGeometry => {
         const geometry = new THREE.BufferGeometry();

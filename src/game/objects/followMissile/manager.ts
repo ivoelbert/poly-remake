@@ -12,6 +12,7 @@ import {
 import { MISSILES_IN_SCENE } from '../../constants';
 import { Manager } from '../manager';
 import { MissileMeshFactory } from './meshFactory';
+import { PolyCollider, Groups } from '../../collider';
 
 export class FollowMissileManager implements Manager<FollowMissile> {
     private idleObjects: Set<FollowMissile>;
@@ -19,7 +20,7 @@ export class FollowMissileManager implements Manager<FollowMissile> {
     private scene: PolyScene;
     private meshFactory: MissileMeshFactory;
 
-    constructor(followedObject: THREE.Object3D) {
+    constructor(followedObject: THREE.Object3D, private collider: PolyCollider) {
         this.idleObjects = new Set();
         this.liveObjects = new Set();
         this.scene = PolyScene.getInstance();
@@ -48,12 +49,16 @@ export class FollowMissileManager implements Manager<FollowMissile> {
         this.liveObjects.add(objectToSpawn);
 
         objectToSpawn.spawn(position, direction);
+
+        this.collider.addObjectToGroup(objectToSpawn, Groups.missiles);
     };
 
     public drop = (objectToDelete: FollowMissile) => {
         objectToDelete.mesh.position.copy(getDumpster());
         this.liveObjects.delete(objectToDelete);
         this.idleObjects.add(objectToDelete);
+
+        this.collider.removeObjectFromGroup(objectToDelete, Groups.missiles);
     };
 
     public update = () => {

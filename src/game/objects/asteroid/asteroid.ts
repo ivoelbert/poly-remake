@@ -5,9 +5,12 @@ import { PolyClock } from '../../clock/PolyClock';
 import { tooFarFromCenter } from '../../utils';
 import { DropFunction } from '../manager';
 import { AsteroidMeshFactory } from './meshFactory';
+import { PolyHitbox } from '../hitbox';
 
 export class Asteroid implements PolyObject {
     public mesh: THREE.Object3D;
+    public hitbox: PolyHitbox;
+
     private normal: Vector3;
     private drop: () => void;
     private angularVelocity: number;
@@ -16,6 +19,8 @@ export class Asteroid implements PolyObject {
 
     constructor(meshFactory: AsteroidMeshFactory, drop: DropFunction<Asteroid>) {
         this.mesh = meshFactory.buildMesh();
+        this.hitbox = new PolyHitbox(this.mesh, meshFactory.getHitboxGeometry());
+
         this.normal = new Vector3(0, 1, 0);
 
         this.angularVelocity = 1;
@@ -29,6 +34,10 @@ export class Asteroid implements PolyObject {
         this.normal = normal;
     };
 
+    public onCollide = (who: PolyObject): void => {
+        this.drop();
+    };
+
     public update = (): void => {
         const { delta } = this.clock;
         // Rotation
@@ -40,8 +49,9 @@ export class Asteroid implements PolyObject {
         const lengthOffset = this.radialVelocity * delta;
         this.mesh.position.setLength(currentLength + lengthOffset);
 
+        this.hitbox.update();
+
         if (tooFarFromCenter(this.mesh.position)) {
-            console.log('dropping asteroid!');
             this.drop();
         }
     };
