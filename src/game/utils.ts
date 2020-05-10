@@ -14,8 +14,35 @@ export const randomUnitVector = (): THREE.Vector3 => {
     return new THREE.Vector3(Math.random(), Math.random(), Math.random()).normalize();
 };
 
+export const randomOrthogonalUnitVector = (vec: THREE.Vector3): THREE.Vector3 => {
+    const x = new THREE.Vector3(1, 0, 0);
+    const y = new THREE.Vector3(0, 1, 0);
+    const z = new THREE.Vector3(0, 0, 1);
+
+    const mostPerpendicular = [y, z].reduce((best, current) => {
+        if (vec.dot(best) > vec.dot(current)) {
+            return current;
+        }
+        return best;
+    }, x);
+
+    if (chance(0.5)) {
+        mostPerpendicular.negate();
+    }
+
+    return new THREE.Vector3().crossVectors(vec, mostPerpendicular);
+};
+
+export const randomTinyVector = (): THREE.Vector3 => {
+    return new THREE.Vector3(Math.random(), Math.random(), Math.random()).setLength(0.00001);
+};
+
 export const getOrigin = (): THREE.Vector3 => {
     return new THREE.Vector3(0, 0, 0);
+};
+
+export const chance = (p: number): boolean => {
+    return Math.random() < p;
 };
 
 // The dumpster has to be very, very far from the center so the camera doesn't catch it.

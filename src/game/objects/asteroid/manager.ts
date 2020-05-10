@@ -1,8 +1,15 @@
 import { Vector3 } from 'three';
 import { Asteroid } from './asteroid';
 import { PolyScene } from '../../scene/PolyScene';
-import { repeat, getDumpster, randomUnitVector, assertExists, getOne } from '../../utils';
-import { ASTEROIDS_IN_SCENE, MIN_RADIUS } from '../../constants';
+import {
+    repeat,
+    getDumpster,
+    randomUnitVector,
+    assertExists,
+    getOne,
+    randomOrthogonalUnitVector,
+} from '../../utils';
+import { ASTEROIDS_IN_SCENE } from '../../constants';
 import { Manager } from '../manager';
 import { AsteroidMeshFactory } from './meshFactory';
 import { PolyCollider, Groups } from '../../collider';
@@ -28,10 +35,15 @@ export class AsteroidManager implements Manager<Asteroid> {
         this.idleObjects.forEach((object) => this.scene.add(object.mesh));
 
         // For debug only
-        const initialPosition = new Vector3(0, MIN_RADIUS, 0);
-        this.spawn(initialPosition, randomUnitVector());
-        setInterval(() => this.spawn(initialPosition, randomUnitVector()), 10000);
+        setInterval(this.spawnRandom, 3000);
     }
+
+    private spawnRandom = (): void => {
+        const normal = randomUnitVector();
+        const position = randomOrthogonalUnitVector(normal);
+
+        this.spawn(position, normal);
+    };
 
     public spawn = (position: Vector3, normal: Vector3) => {
         // If no available objects blow up. In the future we should do better.
