@@ -1,11 +1,11 @@
 import * as THREE from 'three';
 import { PolyObject } from '../polyObject';
 import { Vector3 } from 'three';
-import { PolyClock } from '../../clock/PolyClock';
 import { DropFunction } from '../manager';
-import { ShotMeshFactory } from './meshFactory';
 import { CENTER_RADIUS } from '../../constants';
 import { PolyHitbox } from '../hitbox';
+import { MeshFactory } from '../meshFactory';
+import { PolyClock } from '../../clock/PolyClock';
 
 export class Shot implements PolyObject {
     public mesh: THREE.Object3D;
@@ -13,14 +13,12 @@ export class Shot implements PolyObject {
 
     private drop: () => void;
     private speed: number;
-    private clock: PolyClock;
 
-    constructor(meshFactory: ShotMeshFactory, drop: DropFunction<Shot>) {
+    constructor(meshFactory: MeshFactory, private clock: PolyClock, drop: DropFunction<Shot>) {
         this.mesh = meshFactory.buildMesh();
         this.hitbox = new PolyHitbox(this.mesh, meshFactory.getHitboxGeometry());
 
         this.speed = 200;
-        this.clock = PolyClock.getInstance();
         this.drop = () => drop(this);
     }
 
@@ -33,7 +31,7 @@ export class Shot implements PolyObject {
     };
 
     public update = (): void => {
-        const { delta } = this.clock;
+        const delta = this.clock.getDelta();
 
         const currentLength = this.mesh.position.length();
         const lengthOffset = this.speed * delta;

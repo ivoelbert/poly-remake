@@ -4,8 +4,8 @@ import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPa
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
 
 const BLOOM_PARAMS = {
-    exposure: 1.05,
-    bloomStrength: 1.2,
+    exposure: 1.01,
+    bloomStrength: 1.1,
     bloomThreshold: 0,
     bloomRadius: 0,
 };
@@ -18,18 +18,16 @@ export class PolyRenderer {
         this.renderer = new THREE.WebGLRenderer();
         this.renderer.setSize(window.innerWidth, window.innerHeight);
         this.renderer.toneMappingExposure = Math.pow(BLOOM_PARAMS.exposure, 4.0);
+        this.renderer.outputEncoding = THREE.sRGBEncoding;
 
         const renderScene = new RenderPass(scene, camera);
 
         const bloomPass = new UnrealBloomPass(
             new THREE.Vector2(window.innerWidth, window.innerHeight),
-            1.5,
-            0.4,
-            0.85
+            BLOOM_PARAMS.bloomStrength,
+            BLOOM_PARAMS.bloomRadius,
+            BLOOM_PARAMS.bloomThreshold
         );
-        bloomPass.threshold = BLOOM_PARAMS.bloomThreshold;
-        bloomPass.strength = BLOOM_PARAMS.bloomStrength;
-        bloomPass.radius = BLOOM_PARAMS.bloomRadius;
 
         this.composer = new EffectComposer(this.renderer);
         this.composer.renderToScreen = false;

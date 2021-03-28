@@ -1,4 +1,4 @@
 export interface MeshFactory {
-    buildMesh: () => void;
+    buildMesh: () => THREE.Mesh;
     getHitboxGeometry: () => THREE.Geometry | THREE.BufferGeometry;
 }

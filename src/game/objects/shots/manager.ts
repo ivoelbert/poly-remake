@@ -1,11 +1,12 @@
 import { Vector3 } from 'three';
 import { Shot } from './shot';
 import { PolyScene } from '../../scene/PolyScene';
-import { repeat, getDumpster, getOne, assertExists } from '../../utils';
+import { repeat, getDumpster, getOne, assertExists } from '../../utils/utils';
 import { SHOTS_IN_SCENE } from '../../constants';
 import { Manager } from '../manager';
 import { ShotMeshFactory } from './meshFactory';
 import { PolyCollider, Groups } from '../../collider';
+import { PolyClock } from '../../clock/PolyClock';
 
 export class ShotManager implements Manager<Shot> {
     private idleObjects: Set<Shot>;
@@ -13,14 +14,14 @@ export class ShotManager implements Manager<Shot> {
     private scene: PolyScene;
     private meshFactory: ShotMeshFactory;
 
-    constructor(private collider: PolyCollider) {
+    constructor(private collider: PolyCollider, private clock: PolyClock) {
         this.idleObjects = new Set();
         this.liveObjects = new Set();
         this.scene = PolyScene.getInstance();
         this.meshFactory = new ShotMeshFactory();
 
         repeat(SHOTS_IN_SCENE, (_) => {
-            const object = new Shot(this.meshFactory, this.drop);
+            const object = new Shot(this.meshFactory, this.clock, this.drop);
             object.mesh.position.copy(getDumpster());
             this.idleObjects.add(object);
         });

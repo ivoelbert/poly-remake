@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { assertExists, isNil } from '../utils';
+import { assertExists, isNil } from '../utils/utils';
 import { PolyScene } from '../scene/PolyScene';
 
 export class PolyHitbox {
@@ -17,6 +17,7 @@ export class PolyHitbox {
         this.hitboxDebug = null;
 
         this.update();
+        //this.debug();
     }
 
     debug = (): void => {

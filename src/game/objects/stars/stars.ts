@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { repeat, MathUtils } from '../../utils';
+import { repeat, MathUtils } from '../../utils/utils';
 import { CENTER_RADIUS } from '../../constants';
 
 export class Stars {

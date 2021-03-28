@@ -6,9 +6,9 @@ import {
     getIdleMoveState,
     lerpMoveStates,
 } from './polyControls';
-import { PolyClock } from '../clock/PolyClock';
 import { MAX_RADIUS, MIN_RADIUS } from '../constants';
 import { ShotManager } from '../objects/shots/manager';
+import { PolyClock } from '../clock/PolyClock';
 
 /**
  * Transforms an object based on the supplied controls
@@ -16,7 +16,6 @@ import { ShotManager } from '../objects/shots/manager';
 const MOVEMENT_EPSILON = 0.00001;
 
 export class ObjectController {
-    private clock: PolyClock;
     private moveState: MoveState;
     private shotDelta: number;
 
@@ -29,9 +28,9 @@ export class ObjectController {
     constructor(
         private controls: PolyControls,
         private object: THREE.Object3D,
-        private shots: ShotManager
+        private shots: ShotManager,
+        private clock: PolyClock
     ) {
-        this.clock = PolyClock.getInstance();
         this.moveState = getIdleMoveState();
         this.shotDelta = 0;
 
@@ -110,8 +109,7 @@ export class ObjectController {
     };
 
     private updateShots = (): void => {
-        const delta = this.clock.delta;
-        this.shotDelta += delta;
+        this.shotDelta += this.clock.getDelta();
 
         if (this.shotDelta > this.shotRecoveryTime && this.moveState[Movements.shoot] === 1) {
             this.shotDelta = 0;

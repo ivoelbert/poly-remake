@@ -1,29 +1,31 @@
 import * as THREE from 'three';
 
 /**
- * Singleton clock, anyone can get the instance and check the delta time.
- *
- * The delta must be recomputed with `tick` on every render
+ * The delta and elapsed must be recomputed with `tick` on every render
  */
+export interface ClockTick {
+    delta: number;
+    elapsed: number;
+}
+
 export class PolyClock {
     private clock: THREE.Clock;
-    public delta: number;
-    public elapsed: number;
-    private static instance: PolyClock;
+    private delta: number;
+    private elapsed: number;
 
-    private constructor() {
+    constructor() {
         // Autostarts
         this.clock = new THREE.Clock();
         this.delta = 0;
         this.elapsed = 0;
     }
 
-    static getInstance = (): PolyClock => {
-        if (!PolyClock.instance) {
-            PolyClock.instance = new PolyClock();
-        }
+    public getDelta = (): number => {
+        return this.delta;
+    };
 
-        return PolyClock.instance;
+    public getElapsed = (): number => {
+        return this.elapsed;
     };
 
     public tick = (): void => {

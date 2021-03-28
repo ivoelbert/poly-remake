@@ -8,11 +8,12 @@ import {
     assertExists,
     randomUnitVector,
     getOrigin,
-} from '../../utils';
+} from '../../utils/utils';
 import { MISSILES_IN_SCENE } from '../../constants';
 import { Manager } from '../manager';
 import { MissileMeshFactory } from './meshFactory';
 import { PolyCollider, Groups } from '../../collider';
+import { PolyClock } from '../../clock/PolyClock';
 
 export class FollowMissileManager implements Manager<FollowMissile> {
     private idleObjects: Set<FollowMissile>;
@@ -20,14 +21,23 @@ export class FollowMissileManager implements Manager<FollowMissile> {
     private scene: PolyScene;
     private meshFactory: MissileMeshFactory;
 
-    constructor(followedObject: THREE.Object3D, private collider: PolyCollider) {
+    constructor(
+        followedObject: THREE.Object3D,
+        private clock: PolyClock,
+        private collider: PolyCollider
+    ) {
         this.idleObjects = new Set();
         this.liveObjects = new Set();
         this.scene = PolyScene.getInstance();
         this.meshFactory = new MissileMeshFactory();
 
         repeat(MISSILES_IN_SCENE, (_) => {
-            const object = new FollowMissile(followedObject, this.meshFactory, this.drop);
+            const object = new FollowMissile(
+                followedObject,
+                this.clock,
+                this.meshFactory,
+                this.drop
+            );
             object.mesh.position.copy(getDumpster());
             this.idleObjects.add(object);
         });

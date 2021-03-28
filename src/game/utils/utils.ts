@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { TOO_FAR_TO_CARE, CENTER_RADIUS } from './constants';
+import { TOO_FAR_TO_CARE, CENTER_RADIUS } from '../constants';
 
 type RepeatFunction = (index: number) => void;
 export const repeat = (times: number, f: RepeatFunction) => {

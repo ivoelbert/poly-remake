@@ -6,7 +6,7 @@ export class AsteroidMeshFactory implements MeshFactory {
     private hitboxGeometry: THREE.Geometry | THREE.BufferGeometry;
 
     constructor() {
-        this.hitboxGeometry = new THREE.DodecahedronBufferGeometry(1);
+        this.hitboxGeometry = new THREE.DodecahedronBufferGeometry(1.5);
         const material = new THREE.MeshBasicMaterial({
             color: 0x2bfa2b,
             wireframe: true,

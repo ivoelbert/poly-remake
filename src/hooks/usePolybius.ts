@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { Polybius } from '../game/polybius';
-import { assertExists } from '../game/utils';
+import { assertExists } from '../game/utils/utils';
 
 const polybius = new Polybius();
 

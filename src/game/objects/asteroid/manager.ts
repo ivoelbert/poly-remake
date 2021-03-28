@@ -8,11 +8,12 @@ import {
     assertExists,
     getOne,
     randomOrthogonalUnitVector,
-} from '../../utils';
-import { ASTEROIDS_IN_SCENE } from '../../constants';
+} from '../../utils/utils';
+import { ASTEROIDS_IN_SCENE, CENTER_RADIUS } from '../../constants';
 import { Manager } from '../manager';
 import { AsteroidMeshFactory } from './meshFactory';
 import { PolyCollider, Groups } from '../../collider';
+import { PolyClock } from '../../clock/PolyClock';
 
 export class AsteroidManager implements Manager<Asteroid> {
     private idleObjects: Set<Asteroid>;
@@ -20,14 +21,14 @@ export class AsteroidManager implements Manager<Asteroid> {
     private scene: PolyScene;
     private meshFactory: AsteroidMeshFactory;
 
-    constructor(private collider: PolyCollider) {
+    constructor(private collider: PolyCollider, private clock: PolyClock) {
         this.idleObjects = new Set();
         this.liveObjects = new Set();
         this.scene = PolyScene.getInstance();
         this.meshFactory = new AsteroidMeshFactory();
 
         repeat(ASTEROIDS_IN_SCENE, (_) => {
-            const object = new Asteroid(this.meshFactory, this.drop);
+            const object = new Asteroid(this.meshFactory, this.clock, this.drop);
             object.mesh.position.copy(getDumpster());
             this.idleObjects.add(object);
         });
@@ -40,7 +41,7 @@ export class AsteroidManager implements Manager<Asteroid> {
 
     private spawnRandom = (): void => {
         const normal = randomUnitVector();
-        const position = randomOrthogonalUnitVector(normal);
+        const position = randomOrthogonalUnitVector(normal).setLength(CENTER_RADIUS);
 
         this.spawn(position, normal);
     };

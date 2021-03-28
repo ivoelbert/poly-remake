@@ -1,8 +1,6 @@
 import * as THREE from 'three';
-import { PolyClock } from '../clock/PolyClock';
 
 export class FollowCamera extends THREE.PerspectiveCamera {
-    private clock: PolyClock;
     private distance: number;
     private inertiaFactor: number;
 
@@ -11,7 +9,6 @@ export class FollowCamera extends THREE.PerspectiveCamera {
 
         this.distance = 2;
         this.inertiaFactor = 0.8;
-        this.clock = PolyClock.getInstance();
 
         this.update();
     }

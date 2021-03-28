@@ -1,5 +1,5 @@
 import { Stars } from './objects/stars/stars';
-import { consoleInfo } from './utils';
+import { consoleInfo } from './utils/utils';
 import { Center } from './objects/center';
 import { KeyboardControls } from './controls/keyboardControls';
 import { PolyClock } from './clock/PolyClock';
@@ -31,7 +31,7 @@ export class Polybius {
         this.scene = PolyScene.getInstance();
 
         // Set up the clock
-        this.clock = PolyClock.getInstance();
+        this.clock = new PolyClock();
 
         // Set up the collider
         this.collider = new PolyCollider();
@@ -59,12 +59,17 @@ export class Polybius {
 
         this.scene.add(this.ship.mesh, stars.mesh, center.mesh);
 
-        this.asteroids = new AsteroidManager(this.collider);
-        this.missiles = new FollowMissileManager(this.ship.mesh, this.collider);
-        this.shots = new ShotManager(this.collider);
+        this.asteroids = new AsteroidManager(this.collider, this.clock);
+        this.missiles = new FollowMissileManager(this.ship.mesh, this.clock, this.collider);
+        this.shots = new ShotManager(this.collider, this.clock);
 
         this.controls = new KeyboardControls();
-        this.objectController = new ObjectController(this.controls, this.ship.mesh, this.shots);
+        this.objectController = new ObjectController(
+            this.controls,
+            this.ship.mesh,
+            this.shots,
+            this.clock
+        );
 
         // Start the render loop!
         consoleInfo('Game started!');

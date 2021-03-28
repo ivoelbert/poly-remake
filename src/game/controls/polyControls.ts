@@ -1,4 +1,4 @@
-import { MathUtils } from '../utils';
+import { MathUtils } from '../utils/utils';
 
 // All posible inputs
 export enum Movements {

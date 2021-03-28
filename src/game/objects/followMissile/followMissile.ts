@@ -1,17 +1,16 @@
 import * as THREE from 'three';
 import { PolyObject } from '../polyObject';
-import { PolyClock } from '../../clock/PolyClock';
-import { randomUnitVector, MathUtils, tooFarFromCenter } from '../../utils';
+import { randomUnitVector, MathUtils, tooFarFromCenter } from '../../utils/utils';
 import { MissileMeshFactory } from './meshFactory';
 import { DropFunction } from '../manager';
 import { PolyHitbox } from '../hitbox';
+import { PolyClock } from '../../clock/PolyClock';
 
 export class FollowMissile implements PolyObject {
     public mesh: THREE.Object3D;
     public hitbox: PolyHitbox;
 
     private direction: THREE.Vector3;
-    private clock: PolyClock;
     private drop: () => void;
 
     private angSpeed: number;
@@ -19,11 +18,10 @@ export class FollowMissile implements PolyObject {
 
     constructor(
         private object: THREE.Object3D,
+        private clock: PolyClock,
         meshFactory: MissileMeshFactory,
         drop: DropFunction<FollowMissile>
     ) {
-        this.clock = PolyClock.getInstance();
-
         this.angSpeed = 3;
         this.speed = 40;
 
@@ -60,8 +58,7 @@ export class FollowMissile implements PolyObject {
     };
 
     private updateRotation = (): void => {
-        const delta = this.clock.delta;
-
+        const delta = this.clock.getDelta();
         const towards = this.object.position.clone();
         towards.sub(this.mesh.position);
 
@@ -76,8 +73,7 @@ export class FollowMissile implements PolyObject {
     };
 
     private updatePosition = (): void => {
-        const delta = this.clock.delta;
-
+        const delta = this.clock.getDelta();
         const step = this.direction.clone();
         step.multiplyScalar(this.speed * delta);
 
@@ -85,9 +81,8 @@ export class FollowMissile implements PolyObject {
     };
 
     private updateFlames = (): void => {
-        const delta = this.clock.delta;
-        const elapsed = this.clock.elapsed;
-
+        const delta = this.clock.getDelta();
+        const elapsed = this.clock.getElapsed();
         this.mesh.children[0].scale.y += Math.sin(elapsed * 10) * 0.05;
         this.mesh.children[0].rotateY(delta * 10);
         this.mesh.children[1].scale.y -= Math.cos(elapsed * 10) * 0.05;

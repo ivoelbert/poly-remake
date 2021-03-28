@@ -1,4 +1,4 @@
-import { isNil } from '../utils';
+import { isNil } from '../utils/utils';
 import { Movements, MoveState, getIdleMoveState, PolyControls } from './polyControls';
 
 /**
