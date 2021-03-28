@@ -1,12 +1,12 @@
 import * as THREE from 'three';
 import { PolyObject } from '../polyObject';
 import { Vector3 } from 'three';
-import { tooFarFromCenter } from '../../utils/utils';
 import { DropFunction } from '../manager';
 import { PolyHitbox } from '../hitbox';
 import { MeshFactory } from '../meshFactory';
 import { PolyClock } from '../../clock/PolyClock';
 import { constrain01, easeOutElastic, linearMap } from '../../utils/easing';
+import { MAX_RADIUS } from '../../constants';
 
 const SPAWN_ANIMATION_MS = 1000;
 
@@ -68,4 +68,8 @@ export class Asteroid implements PolyObject {
             this.drop();
         }
     };
+}
+
+function tooFarFromCenter(point: THREE.Vector3): boolean {
+    return point.length() > MAX_RADIUS;
 }

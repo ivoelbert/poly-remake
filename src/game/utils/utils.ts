@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { TOO_FAR_TO_CARE, CENTER_RADIUS } from '../constants';
+import { CENTER_RADIUS } from '../constants';
 
 type RepeatFunction = (index: number) => void;
 export const repeat = (times: number, f: RepeatFunction) => {
@@ -86,8 +86,6 @@ export const consoleInfo = (message: string): void => {
 };
 
 export const noop = () => {};
-
-export const tooFarFromCenter = (point: THREE.Vector3) => point.length() > TOO_FAR_TO_CARE;
 
 export const getOne = <T>(set: Set<T>): T | nil => {
     return set.values().next().value;

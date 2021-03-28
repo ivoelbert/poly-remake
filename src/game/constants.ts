@@ -5,7 +5,6 @@ export const MIN_RADIUS = 3 * CENTER_RADIUS;
 export const MAX_RADIUS = 10 * CENTER_RADIUS;
 
 export const CENTER = new THREE.Vector3();
-export const TOO_FAR_TO_CARE = CENTER_RADIUS * 15;
 
 export const ASTEROIDS_IN_SCENE = 50;
 export const MISSILES_IN_SCENE = 50;

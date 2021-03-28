@@ -1,10 +1,11 @@
 import * as THREE from 'three';
 import { PolyObject } from '../polyObject';
-import { randomUnitVector, MathUtils, tooFarFromCenter } from '../../utils/utils';
+import { randomUnitVector, MathUtils } from '../../utils/utils';
 import { MissileMeshFactory } from './meshFactory';
 import { DropFunction } from '../manager';
 import { PolyHitbox } from '../hitbox';
 import { PolyClock } from '../../clock/PolyClock';
+import { MAX_RADIUS } from '../../constants';
 
 export class FollowMissile implements PolyObject {
     public mesh: THREE.Object3D;
@@ -95,4 +96,8 @@ export class FollowMissile implements PolyObject {
         this.mesh.lookAt(lookAtPos);
         this.mesh.rotateOnAxis(new THREE.Vector3(1, 0, 0), Math.PI * 0.5);
     };
+}
+
+function tooFarFromCenter(point: THREE.Vector3): boolean {
+    return point.length() > MAX_RADIUS;
 }
