@@ -1,27 +1,25 @@
-import * as THREE from 'three';
-import { Shot } from './shot';
-import { PolyScene } from '../../scene/PolyScene';
-import { repeat, getDumpster, getOne, assertExists } from '../../utils/utils';
-import { SHOTS_IN_SCENE } from '../../constants';
-import { Manager } from '../manager';
-import { ShotMeshFactory } from './meshFactory';
-import { PolyCollider, Groups } from '../../collider';
 import { PolyClock } from '../../clock/PolyClock';
+import { EXPLOSIONS_IN_SCENE } from '../../constants';
+import { PolyScene } from '../../scene/PolyScene';
+import { assertExists, getDumpster, getOne, repeat } from '../../utils/utils';
+import { Manager } from '../manager';
+import { Explosion } from './explosion';
+import { ExplosionMeshFactory } from './meshFactory';
 
-export class ShotManager implements Manager<Shot> {
-    private idleObjects: Set<Shot>;
-    private liveObjects: Set<Shot>;
+export class ExplosionsManager implements Manager<Explosion> {
+    private idleObjects: Set<Explosion>;
+    private liveObjects: Set<Explosion>;
     private scene: PolyScene;
-    private meshFactory: ShotMeshFactory;
+    private meshFactory: ExplosionMeshFactory;
 
-    constructor(private collider: PolyCollider, private clock: PolyClock) {
+    constructor(private clock: PolyClock) {
         this.idleObjects = new Set();
         this.liveObjects = new Set();
         this.scene = PolyScene.getInstance();
-        this.meshFactory = new ShotMeshFactory();
+        this.meshFactory = new ExplosionMeshFactory();
 
-        repeat(SHOTS_IN_SCENE, (_) => {
-            const object = new Shot(this.meshFactory, this.clock, this.drop);
+        repeat(EXPLOSIONS_IN_SCENE, (_) => {
+            const object = new Explosion(this.meshFactory, this.clock, this.drop);
             object.mesh.position.copy(getDumpster());
             this.idleObjects.add(object);
         });
@@ -38,16 +36,12 @@ export class ShotManager implements Manager<Shot> {
         this.liveObjects.add(objectToSpawn);
 
         objectToSpawn.spawn(position);
-
-        this.collider.addObjectToGroup(objectToSpawn, Groups.shots);
     };
 
-    public drop = (objectToDelete: Shot) => {
+    public drop = (objectToDelete: Explosion) => {
         objectToDelete.mesh.position.copy(getDumpster());
         this.liveObjects.delete(objectToDelete);
         this.idleObjects.add(objectToDelete);
-
-        this.collider.removeObjectFromGroup(objectToDelete, Groups.shots);
     };
 
     public update = () => {

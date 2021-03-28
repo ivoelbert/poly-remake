@@ -14,6 +14,7 @@ import { Manager } from '../manager';
 import { AsteroidMeshFactory } from './meshFactory';
 import { PolyCollider, Groups } from '../../collider';
 import { PolyClock } from '../../clock/PolyClock';
+import { ExplosionsManager } from '../explosion/manager';
 
 export class AsteroidManager implements Manager<Asteroid> {
     private idleObjects: Set<Asteroid>;
@@ -21,14 +22,18 @@ export class AsteroidManager implements Manager<Asteroid> {
     private scene: PolyScene;
     private meshFactory: AsteroidMeshFactory;
 
-    constructor(private collider: PolyCollider, private clock: PolyClock) {
+    constructor(
+        private collider: PolyCollider,
+        private clock: PolyClock,
+        private explosions: ExplosionsManager
+    ) {
         this.idleObjects = new Set();
         this.liveObjects = new Set();
         this.scene = PolyScene.getInstance();
         this.meshFactory = new AsteroidMeshFactory();
 
         repeat(ASTEROIDS_IN_SCENE, (_) => {
-            const object = new Asteroid(this.meshFactory, this.clock, this.drop);
+            const object = new Asteroid(this.meshFactory, this.clock, this.explosions, this.drop);
             object.mesh.position.copy(getDumpster());
             this.idleObjects.add(object);
         });

@@ -1,6 +1,5 @@
 import * as THREE from 'three';
 import { PolyObject } from '../polyObject';
-import { Vector3 } from 'three';
 import { DropFunction } from '../manager';
 import { CENTER_RADIUS } from '../../constants';
 import { PolyHitbox } from '../hitbox';
@@ -22,7 +21,7 @@ export class Shot implements PolyObject {
         this.drop = () => drop(this);
     }
 
-    public spawn = (position: Vector3): void => {
+    public spawn = (position: THREE.Vector3): void => {
         this.mesh.position.copy(position);
     };
 

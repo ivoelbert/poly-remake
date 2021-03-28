@@ -12,6 +12,7 @@ import { AsteroidManager } from './objects/asteroid/manager';
 import { FollowMissileManager } from './objects/followMissile/manager';
 import { ShotManager } from './objects/shots/manager';
 import { PolyCollider, Groups } from './collider';
+import { ExplosionsManager } from './objects/explosion/manager';
 
 export class Polybius {
     private renderer: PolyRenderer;
@@ -21,6 +22,7 @@ export class Polybius {
     private objectController: ObjectController;
     private ship: PolyShip;
     private scene: PolyScene;
+    private explosions: ExplosionsManager;
     private asteroids: AsteroidManager;
     private missiles: FollowMissileManager;
     private shots: ShotManager;
@@ -41,6 +43,8 @@ export class Polybius {
         this.collider.addRule(Groups.shots, Groups.missiles);
         this.collider.addRule(Groups.missiles, Groups.ship);
 
+        this.explosions = new ExplosionsManager(this.clock);
+
         // Set up the ship
         this.ship = new PolyShip();
         this.collider.addObjectToGroup(this.ship, Groups.ship);
@@ -59,7 +63,7 @@ export class Polybius {
 
         this.scene.add(this.ship.mesh, stars.mesh, center.mesh);
 
-        this.asteroids = new AsteroidManager(this.collider, this.clock);
+        this.asteroids = new AsteroidManager(this.collider, this.clock, this.explosions);
         this.missiles = new FollowMissileManager(this.ship.mesh, this.clock, this.collider);
         this.shots = new ShotManager(this.collider, this.clock);
 
@@ -86,6 +90,7 @@ export class Polybius {
         this.asteroids.dispose();
         this.missiles.dispose();
         this.scene.dispose();
+        this.explosions.dispose();
         window.removeEventListener('resize', this.resize);
     };
 
@@ -110,6 +115,7 @@ export class Polybius {
         this.missiles.update();
         this.asteroids.update();
         this.shots.update();
+        this.explosions.update();
 
         this.collider.update();
 

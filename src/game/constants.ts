@@ -9,3 +9,4 @@ export const CENTER = new THREE.Vector3();
 export const ASTEROIDS_IN_SCENE = 50;
 export const MISSILES_IN_SCENE = 50;
 export const SHOTS_IN_SCENE = 20;
+export const EXPLOSIONS_IN_SCENE = 50;

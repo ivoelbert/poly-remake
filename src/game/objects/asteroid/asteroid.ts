@@ -1,12 +1,12 @@
 import * as THREE from 'three';
 import { PolyObject } from '../polyObject';
-import { Vector3 } from 'three';
 import { DropFunction } from '../manager';
 import { PolyHitbox } from '../hitbox';
 import { MeshFactory } from '../meshFactory';
 import { PolyClock } from '../../clock/PolyClock';
 import { constrain01, easeOutElastic, linearMap } from '../../utils/easing';
 import { MAX_RADIUS } from '../../constants';
+import { ExplosionsManager } from '../explosion/manager';
 
 const SPAWN_ANIMATION_MS = 1000;
 
@@ -14,26 +14,35 @@ export class Asteroid implements PolyObject {
     public mesh: THREE.Object3D;
     public hitbox: PolyHitbox;
 
-    private normal: Vector3;
+    private normal: THREE.Vector3;
     private drop: () => void;
     private angularVelocity: number;
     private radialVelocity: number;
 
     private epoch: number;
 
-    constructor(meshFactory: MeshFactory, private clock: PolyClock, drop: DropFunction<Asteroid>) {
+    constructor(
+        meshFactory: MeshFactory,
+        private clock: PolyClock,
+        private explosions: ExplosionsManager,
+        drop: DropFunction<Asteroid>
+    ) {
         this.mesh = meshFactory.buildMesh();
         this.hitbox = new PolyHitbox(this.mesh, meshFactory.getHitboxGeometry());
 
-        this.normal = new Vector3(0, 1, 0);
+        this.normal = new THREE.Vector3(0, 1, 0);
 
         this.angularVelocity = 1;
         this.radialVelocity = 1;
-        this.drop = () => drop(this);
         this.epoch = 0;
+
+        this.drop = () => {
+            explosions.spawn(this.mesh.position.clone());
+            drop(this);
+        };
     }
 
-    public spawn = (position: Vector3, normal: Vector3): void => {
+    public spawn = (position: THREE.Vector3, normal: THREE.Vector3): void => {
         this.mesh.position.copy(position);
         this.normal = normal;
         this.epoch = this.clock.getElapsed();

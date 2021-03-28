@@ -10,8 +10,12 @@ export const repeat = (times: number, f: RepeatFunction) => {
 
 export const MathUtils = THREE.MathUtils;
 
+export function randFloat(min: number, max: number) {
+    return Math.random() * (max - min) + min;
+}
+
 export const randomUnitVector = (): THREE.Vector3 => {
-    return new THREE.Vector3(Math.random(), Math.random(), Math.random()).normalize();
+    return new THREE.Vector3(randFloat(-1, 1), randFloat(-1, 1), randFloat(-1, 1)).normalize();
 };
 
 export const randomOrthogonalUnitVector = (vec: THREE.Vector3): THREE.Vector3 => {
@@ -34,7 +38,7 @@ export const randomOrthogonalUnitVector = (vec: THREE.Vector3): THREE.Vector3 =>
 };
 
 export const randomTinyVector = (): THREE.Vector3 => {
-    return new THREE.Vector3(Math.random(), Math.random(), Math.random()).setLength(0.00001);
+    return randomUnitVector().setLength(0.00001);
 };
 
 export const getOrigin = (): THREE.Vector3 => {
@@ -42,7 +46,7 @@ export const getOrigin = (): THREE.Vector3 => {
 };
 
 export const chance = (p: number): boolean => {
-    return Math.random() < p;
+    return randFloat(0, 1) < p;
 };
 
 // The dumpster has to be very, very far from the center so the camera doesn't catch it.
