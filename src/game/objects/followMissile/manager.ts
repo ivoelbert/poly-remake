@@ -14,28 +14,30 @@ import { Manager } from '../manager';
 import { MissileMeshFactory } from './meshFactory';
 import { PolyCollider, Groups } from '../../collider';
 import { PolyClock } from '../../clock/PolyClock';
+import { ExplosionsManager } from '../explosion/manager';
 
 export class FollowMissileManager implements Manager<FollowMissile> {
     private idleObjects: Set<FollowMissile>;
     private liveObjects: Set<FollowMissile>;
-    private scene: PolyScene;
-    private meshFactory: MissileMeshFactory;
+    private intervalId: NodeJS.Timeout | null;
 
     constructor(
+        private scene: PolyScene,
         followedObject: THREE.Object3D,
         private clock: PolyClock,
-        private collider: PolyCollider
+        private collider: PolyCollider,
+        explosions: ExplosionsManager
     ) {
         this.idleObjects = new Set();
         this.liveObjects = new Set();
-        this.scene = PolyScene.getInstance();
-        this.meshFactory = new MissileMeshFactory();
+        const meshFactory = new MissileMeshFactory();
 
         repeat(MISSILES_IN_SCENE, (_) => {
             const object = new FollowMissile(
                 followedObject,
                 this.clock,
-                this.meshFactory,
+                explosions,
+                meshFactory,
                 this.drop
             );
             object.mesh.position.copy(getDumpster());
@@ -43,12 +45,14 @@ export class FollowMissileManager implements Manager<FollowMissile> {
         });
 
         this.idleObjects.forEach((object) => this.scene.add(object.mesh));
+        this.intervalId = null;
+    }
 
-        // For debug only
+    public start = () => {
         const initialPosition = getOrigin();
         this.spawn(initialPosition, randomUnitVector());
-        setInterval(() => this.spawn(initialPosition, randomUnitVector()), 10000);
-    }
+        this.intervalId = setInterval(() => this.spawn(initialPosition, randomUnitVector()), 10000);
+    };
 
     public spawn = (position: Vector3, direction: Vector3) => {
         // If no available objects blow up. In the future we should do better.
@@ -78,5 +82,9 @@ export class FollowMissileManager implements Manager<FollowMissile> {
     public dispose = () => {
         this.liveObjects.forEach((object) => this.scene.remove(object.mesh));
         this.idleObjects.forEach((object) => this.scene.remove(object.mesh));
+
+        if (this.intervalId !== null) {
+            clearInterval(this.intervalId);
+        }
     };
 }

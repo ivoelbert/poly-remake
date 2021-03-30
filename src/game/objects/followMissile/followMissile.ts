@@ -5,23 +5,26 @@ import { MissileMeshFactory } from './meshFactory';
 import { DropFunction } from '../manager';
 import { PolyHitbox } from '../hitbox';
 import { PolyClock } from '../../clock/PolyClock';
-import { MAX_RADIUS } from '../../constants';
+import { ExplosionsManager } from '../explosion/manager';
+
+const MISSILE_LIFETIME = 7;
 
 export class FollowMissile implements PolyObject {
     public mesh: THREE.Object3D;
     public hitbox: PolyHitbox;
 
     private direction: THREE.Vector3;
-    private drop: () => void;
-
     private angSpeed: number;
     private speed: number;
+
+    private epoch: number;
 
     constructor(
         private object: THREE.Object3D,
         private clock: PolyClock,
+        private explosions: ExplosionsManager,
         meshFactory: MissileMeshFactory,
-        drop: DropFunction<FollowMissile>
+        private dropObject: DropFunction<FollowMissile>
     ) {
         this.angSpeed = 3;
         this.speed = 40;
@@ -30,11 +33,11 @@ export class FollowMissile implements PolyObject {
         this.direction = randomUnitVector();
 
         this.hitbox = new PolyHitbox(this.mesh, meshFactory.getHitboxGeometry());
-
-        this.drop = () => drop(this);
+        this.epoch = 0;
     }
 
     public spawn = (position: THREE.Vector3, direction: THREE.Vector3): void => {
+        this.epoch = this.clock.getElapsed();
         this.mesh.position.copy(position);
         this.direction.copy(direction);
         this.direction.normalize();
@@ -49,7 +52,10 @@ export class FollowMissile implements PolyObject {
 
         this.hitbox.update();
 
-        if (tooFarFromCenter(this.mesh.position)) {
+        const elapsed = this.clock.getElapsed();
+        const lifeTime = elapsed - this.epoch;
+
+        if (lifeTime > MISSILE_LIFETIME) {
             this.drop();
         }
     };
@@ -96,8 +102,9 @@ export class FollowMissile implements PolyObject {
         this.mesh.lookAt(lookAtPos);
         this.mesh.rotateOnAxis(new THREE.Vector3(1, 0, 0), Math.PI * 0.5);
     };
-}
 
-function tooFarFromCenter(point: THREE.Vector3): boolean {
-    return point.length() > MAX_RADIUS;
+    private drop = () => {
+        this.explosions.spawn(this.mesh.position.clone());
+        this.dropObject(this);
+    };
 }

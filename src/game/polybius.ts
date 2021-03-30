@@ -20,6 +20,7 @@ export class Polybius {
     private camera: FollowCamera;
     private controls: KeyboardControls;
     private objectController: ObjectController;
+    private center: Center;
     private ship: PolyShip;
     private scene: PolyScene;
     private explosions: ExplosionsManager;
@@ -30,7 +31,7 @@ export class Polybius {
 
     constructor() {
         // Set up the scene
-        this.scene = PolyScene.getInstance();
+        this.scene = new PolyScene();
 
         // Set up the clock
         this.clock = new PolyClock();
@@ -43,7 +44,7 @@ export class Polybius {
         this.collider.addRule(Groups.shots, Groups.missiles);
         this.collider.addRule(Groups.missiles, Groups.ship);
 
-        this.explosions = new ExplosionsManager(this.clock);
+        this.explosions = new ExplosionsManager(this.scene, this.clock);
 
         // Set up the ship
         this.ship = new PolyShip();
@@ -58,14 +59,25 @@ export class Polybius {
 
         // Set up various objects and managers
         const stars = new Stars();
-        const center = new Center();
-        this.collider.addObjectToGroup(center, Groups.center);
+        this.center = new Center(this.clock);
+        this.collider.addObjectToGroup(this.center, Groups.center);
 
-        this.scene.add(this.ship.mesh, stars.mesh, center.mesh);
+        this.scene.add(this.ship.mesh, stars.mesh, this.center.mesh);
 
-        this.asteroids = new AsteroidManager(this.collider, this.clock, this.explosions);
-        this.missiles = new FollowMissileManager(this.ship.mesh, this.clock, this.collider);
-        this.shots = new ShotManager(this.collider, this.clock);
+        this.asteroids = new AsteroidManager(
+            this.scene,
+            this.collider,
+            this.clock,
+            this.explosions
+        );
+        this.missiles = new FollowMissileManager(
+            this.scene,
+            this.ship.mesh,
+            this.clock,
+            this.collider,
+            this.explosions
+        );
+        this.shots = new ShotManager(this.scene, this.collider, this.clock);
 
         this.controls = new KeyboardControls();
         this.objectController = new ObjectController(
@@ -74,23 +86,27 @@ export class Polybius {
             this.shots,
             this.clock
         );
+    }
+
+    public start = (): void => {
+        this.controls.attachListeners();
+        window.addEventListener('resize', this.resize);
+
+        this.asteroids.start();
+        this.missiles.start();
 
         // Start the render loop!
         consoleInfo('Game started!');
         this.animate();
-    }
-
-    public attachListeners = (): void => {
-        this.controls.attachListeners();
-        window.addEventListener('resize', this.resize);
     };
 
     public dispose = (): void => {
         this.controls.dispose();
         this.asteroids.dispose();
         this.missiles.dispose();
-        this.scene.dispose();
         this.explosions.dispose();
+
+        this.scene.dispose();
         window.removeEventListener('resize', this.resize);
     };
 
@@ -111,6 +127,7 @@ export class Polybius {
 
         this.objectController.update();
         this.ship.update();
+        this.center.update();
 
         this.missiles.update();
         this.asteroids.update();

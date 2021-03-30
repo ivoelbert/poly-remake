@@ -1,7 +1,6 @@
 import * as THREE from 'three';
-import { MeshFactory } from '../meshFactory';
 
-export class ShotMeshFactory implements MeshFactory {
+export class ShotMeshFactory {
     private mesh: THREE.Mesh;
     private hitboxGeometry: THREE.Geometry | THREE.BufferGeometry;
 

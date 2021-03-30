@@ -3,22 +3,24 @@ import { PolyObject } from '../polyObject';
 import { DropFunction } from '../manager';
 import { CENTER_RADIUS } from '../../constants';
 import { PolyHitbox } from '../hitbox';
-import { MeshFactory } from '../meshFactory';
 import { PolyClock } from '../../clock/PolyClock';
+import { ShotMeshFactory } from './meshFactory';
 
 export class Shot implements PolyObject {
     public mesh: THREE.Object3D;
     public hitbox: PolyHitbox;
 
-    private drop: () => void;
     private speed: number;
 
-    constructor(meshFactory: MeshFactory, private clock: PolyClock, drop: DropFunction<Shot>) {
+    constructor(
+        meshFactory: ShotMeshFactory,
+        private clock: PolyClock,
+        private dropObject: DropFunction<Shot>
+    ) {
         this.mesh = meshFactory.buildMesh();
         this.hitbox = new PolyHitbox(this.mesh, meshFactory.getHitboxGeometry());
 
         this.speed = 200;
-        this.drop = () => drop(this);
     }
 
     public spawn = (position: THREE.Vector3): void => {
@@ -41,5 +43,9 @@ export class Shot implements PolyObject {
         if (this.mesh.position.length() <= CENTER_RADIUS) {
             this.drop();
         }
+    };
+
+    private drop = () => {
+        this.dropObject(this);
     };
 }

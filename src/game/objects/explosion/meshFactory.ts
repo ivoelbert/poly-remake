@@ -1,19 +1,11 @@
 import * as THREE from 'three';
 import { CENTER_RADIUS } from '../../constants';
 import { randFloat, randomUnitVector } from '../../utils/utils';
-import { MeshFactory } from '../meshFactory';
 
 export const FRAGMENT_INITIAL_COLOR = new THREE.Color(0xffff96);
 export const FRAGMENT_END_COLOR = new THREE.Color(0x610200);
 
-export class ExplosionMeshFactory implements MeshFactory {
-    private hitboxGeometry: THREE.Geometry | THREE.BufferGeometry;
-
-    constructor() {
-        // No hitbox for explosions, yet.
-        this.hitboxGeometry = new THREE.Geometry();
-    }
-
+export class ExplosionMeshFactory {
     public buildMesh = (): THREE.Mesh => {
         const fragmentMaterial = new THREE.MeshBasicMaterial({
             color: FRAGMENT_INITIAL_COLOR,
@@ -38,9 +30,5 @@ export class ExplosionMeshFactory implements MeshFactory {
         const rotationAngle = randFloat(0, 2 * Math.PI);
         groupMesh.rotateOnAxis(randomUnitVector(), rotationAngle);
         return groupMesh;
-    };
-
-    public getHitboxGeometry = (): THREE.Geometry | THREE.BufferGeometry => {
-        return this.hitboxGeometry.clone();
     };
 }

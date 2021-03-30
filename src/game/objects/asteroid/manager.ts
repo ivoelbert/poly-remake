@@ -19,36 +19,30 @@ import { ExplosionsManager } from '../explosion/manager';
 export class AsteroidManager implements Manager<Asteroid> {
     private idleObjects: Set<Asteroid>;
     private liveObjects: Set<Asteroid>;
-    private scene: PolyScene;
-    private meshFactory: AsteroidMeshFactory;
+    private intervalId: NodeJS.Timeout | null;
 
     constructor(
+        private scene: PolyScene,
         private collider: PolyCollider,
         private clock: PolyClock,
         private explosions: ExplosionsManager
     ) {
         this.idleObjects = new Set();
         this.liveObjects = new Set();
-        this.scene = PolyScene.getInstance();
-        this.meshFactory = new AsteroidMeshFactory();
 
+        const meshFactory = new AsteroidMeshFactory();
         repeat(ASTEROIDS_IN_SCENE, (_) => {
-            const object = new Asteroid(this.meshFactory, this.clock, this.explosions, this.drop);
+            const object = new Asteroid(meshFactory, this.clock, this.explosions, this.drop);
             object.mesh.position.copy(getDumpster());
             this.idleObjects.add(object);
         });
 
         this.idleObjects.forEach((object) => this.scene.add(object.mesh));
-
-        // For debug only
-        setInterval(this.spawnRandom, 3000);
+        this.intervalId = null;
     }
 
-    private spawnRandom = (): void => {
-        const normal = randomUnitVector();
-        const position = randomOrthogonalUnitVector(normal).setLength(CENTER_RADIUS);
-
-        this.spawn(position, normal);
+    public start = () => {
+        this.intervalId = setInterval(this.spawnRandom, 3000);
     };
 
     public spawn = (position: Vector3, normal: Vector3) => {
@@ -79,5 +73,16 @@ export class AsteroidManager implements Manager<Asteroid> {
     public dispose = () => {
         this.liveObjects.forEach((object) => this.scene.remove(object.mesh));
         this.idleObjects.forEach((object) => this.scene.remove(object.mesh));
+
+        if (this.intervalId !== null) {
+            clearTimeout(this.intervalId);
+        }
+    };
+
+    private spawnRandom = (): void => {
+        const normal = randomUnitVector();
+        const position = randomOrthogonalUnitVector(normal).setLength(CENTER_RADIUS);
+
+        this.spawn(position, normal);
     };
 }

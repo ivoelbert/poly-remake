@@ -1,9 +1,9 @@
 import * as THREE from 'three';
-import { PolyHitbox } from './hitbox';
+import { Hitbox } from './hitbox';
 
 export interface PolyObject {
     mesh: THREE.Object3D;
     update?: () => void;
-    hitbox: PolyHitbox;
+    hitbox: Hitbox;
     onCollide?: (who: PolyObject) => void;
 }

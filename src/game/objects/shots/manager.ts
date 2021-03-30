@@ -11,17 +11,18 @@ import { PolyClock } from '../../clock/PolyClock';
 export class ShotManager implements Manager<Shot> {
     private idleObjects: Set<Shot>;
     private liveObjects: Set<Shot>;
-    private scene: PolyScene;
-    private meshFactory: ShotMeshFactory;
 
-    constructor(private collider: PolyCollider, private clock: PolyClock) {
+    constructor(
+        private scene: PolyScene,
+        private collider: PolyCollider,
+        private clock: PolyClock
+    ) {
         this.idleObjects = new Set();
         this.liveObjects = new Set();
-        this.scene = PolyScene.getInstance();
-        this.meshFactory = new ShotMeshFactory();
 
+        const meshFactory = new ShotMeshFactory();
         repeat(SHOTS_IN_SCENE, (_) => {
-            const object = new Shot(this.meshFactory, this.clock, this.drop);
+            const object = new Shot(meshFactory, this.clock, this.drop);
             object.mesh.position.copy(getDumpster());
             this.idleObjects.add(object);
         });

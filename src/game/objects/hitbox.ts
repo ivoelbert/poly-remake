@@ -1,9 +1,14 @@
 import * as THREE from 'three';
-import { assertExists, isNil } from '../utils/utils';
+import { assertExists, getDumpster, isNil } from '../utils/utils';
 import { PolyScene } from '../scene/PolyScene';
 
-export class PolyHitbox {
-    public shape: THREE.Sphere;
+export interface Hitbox {
+    intersects(hitbox: Hitbox): boolean;
+    shape: THREE.Sphere;
+}
+
+export class PolyHitbox implements Hitbox {
+    readonly shape: THREE.Sphere;
     private hitboxDebug: THREE.Mesh | null;
 
     constructor(
@@ -17,12 +22,9 @@ export class PolyHitbox {
         this.hitboxDebug = null;
 
         this.update();
-        //this.debug();
     }
 
-    debug = (): void => {
-        const scene = PolyScene.getInstance();
-
+    debug = (scene: PolyScene): void => {
         const geometry = new THREE.SphereBufferGeometry(this.shape.radius, 8, 6);
         const material = new THREE.MeshBasicMaterial({
             color: 0x324ca8,
@@ -44,7 +46,15 @@ export class PolyHitbox {
         }
     };
 
-    intersects = (hitbox: PolyHitbox): boolean => {
+    intersects = (hitbox: Hitbox): boolean => {
         return this.shape.intersectsSphere(hitbox.shape);
+    };
+}
+
+export class NoCollisionsHitbox implements Hitbox {
+    readonly shape: THREE.Sphere = new THREE.Sphere(getDumpster(), 0);
+
+    intersects = (hitbox: Hitbox): boolean => {
+        return false;
     };
 }

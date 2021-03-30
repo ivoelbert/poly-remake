@@ -3,30 +3,30 @@ import { PolyClock } from '../../clock/PolyClock';
 import { CENTER_RADIUS } from '../../constants';
 import { constrain01, linearMap } from '../../utils/easing';
 import { noop, randFloat } from '../../utils/utils';
-import { PolyHitbox } from '../hitbox';
+import { Hitbox, NoCollisionsHitbox } from '../hitbox';
 import { DropFunction } from '../manager';
-import { MeshFactory } from '../meshFactory';
 import { PolyObject } from '../polyObject';
-import { FRAGMENT_END_COLOR, FRAGMENT_INITIAL_COLOR } from './meshFactory';
+import { ExplosionMeshFactory, FRAGMENT_END_COLOR, FRAGMENT_INITIAL_COLOR } from './meshFactory';
 
-const FRAGMENT_LIFETIME_MS = 1000;
+const FRAGMENT_LIFETIME = 1;
 
 export class Explosion implements PolyObject {
     public mesh: THREE.Object3D;
-    public hitbox: PolyHitbox;
+    public hitbox: Hitbox;
 
-    private drop: () => void;
     private epoch: number;
     private fragmentSpeeds: number[];
 
-    constructor(meshFactory: MeshFactory, private clock: PolyClock, drop: DropFunction<Explosion>) {
+    constructor(
+        meshFactory: ExplosionMeshFactory,
+        private clock: PolyClock,
+        private dropObject: DropFunction<Explosion>
+    ) {
         this.mesh = meshFactory.buildMesh();
-        this.hitbox = new PolyHitbox(this.mesh, meshFactory.getHitboxGeometry());
+        this.hitbox = new NoCollisionsHitbox();
 
         this.epoch = 0;
         this.fragmentSpeeds = this.getRandomSpeeds();
-
-        this.drop = () => drop(this);
     }
 
     public spawn = (position: THREE.Vector3): void => {
@@ -45,11 +45,9 @@ export class Explosion implements PolyObject {
         const delta = this.clock.getDelta();
         const lifeTime = elapsed - this.epoch;
 
-        const fragmentLifetime = FRAGMENT_LIFETIME_MS / 1000;
+        const opacity = constrain01(linearMap(lifeTime, 0, FRAGMENT_LIFETIME, 1, 0));
 
-        const opacity = constrain01(linearMap(lifeTime, 0, fragmentLifetime, 1, 0));
-
-        const colorFactor = constrain01(linearMap(lifeTime, 0, fragmentLifetime, 0, 1));
+        const colorFactor = constrain01(linearMap(lifeTime, 0, FRAGMENT_LIFETIME, 0, 1));
         const color = new THREE.Color(FRAGMENT_INITIAL_COLOR).lerp(FRAGMENT_END_COLOR, colorFactor);
 
         this.mesh.children.forEach((fragmentObject, idx) => {
@@ -62,7 +60,7 @@ export class Explosion implements PolyObject {
             (fragment.material as THREE.MeshBasicMaterial).color = color;
         });
 
-        if (lifeTime > fragmentLifetime) {
+        if (lifeTime > FRAGMENT_LIFETIME) {
             this.drop();
         }
     };
@@ -71,5 +69,9 @@ export class Explosion implements PolyObject {
         return this.mesh.children.map((_) => {
             return randFloat(0.5 * CENTER_RADIUS, 1 * CENTER_RADIUS);
         });
+    };
+
+    private drop = () => {
+        this.dropObject(this);
     };
 }

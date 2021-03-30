@@ -9,17 +9,14 @@ import { ExplosionMeshFactory } from './meshFactory';
 export class ExplosionsManager implements Manager<Explosion> {
     private idleObjects: Set<Explosion>;
     private liveObjects: Set<Explosion>;
-    private scene: PolyScene;
-    private meshFactory: ExplosionMeshFactory;
 
-    constructor(private clock: PolyClock) {
+    constructor(private scene: PolyScene, private clock: PolyClock) {
         this.idleObjects = new Set();
         this.liveObjects = new Set();
-        this.scene = PolyScene.getInstance();
-        this.meshFactory = new ExplosionMeshFactory();
 
+        const meshFactory = new ExplosionMeshFactory();
         repeat(EXPLOSIONS_IN_SCENE, (_) => {
-            const object = new Explosion(this.meshFactory, this.clock, this.drop);
+            const object = new Explosion(meshFactory, this.clock, this.drop);
             object.mesh.position.copy(getDumpster());
             this.idleObjects.add(object);
         });
