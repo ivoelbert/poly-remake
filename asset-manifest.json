@@ -1,22 +1,22 @@
 {
   "files": {
-    "main.css": "/poly-remake/static/css/main.3dcb7389.chunk.css",
-    "main.js": "/poly-remake/static/js/main.6d523213.chunk.js",
-    "main.js.map": "/poly-remake/static/js/main.6d523213.chunk.js.map",
+    "main.css": "/poly-remake/static/css/main.2cb6747c.chunk.css",
+    "main.js": "/poly-remake/static/js/main.40a6b085.chunk.js",
+    "main.js.map": "/poly-remake/static/js/main.40a6b085.chunk.js.map",
     "runtime-main.js": "/poly-remake/static/js/runtime-main.d4fa136c.js",
     "runtime-main.js.map": "/poly-remake/static/js/runtime-main.d4fa136c.js.map",
-    "static/js/2.5b24879c.chunk.js": "/poly-remake/static/js/2.5b24879c.chunk.js",
-    "static/js/2.5b24879c.chunk.js.map": "/poly-remake/static/js/2.5b24879c.chunk.js.map",
+    "static/js/2.69632c7b.chunk.js": "/poly-remake/static/js/2.69632c7b.chunk.js",
+    "static/js/2.69632c7b.chunk.js.map": "/poly-remake/static/js/2.69632c7b.chunk.js.map",
     "index.html": "/poly-remake/index.html",
-    "precache-manifest.c0a187cdcf8b38ed69eae2099a9aa245.js": "/poly-remake/precache-manifest.c0a187cdcf8b38ed69eae2099a9aa245.js",
+    "precache-manifest.d3469563e61eb90991e64528f4edf6b8.js": "/poly-remake/precache-manifest.d3469563e61eb90991e64528f4edf6b8.js",
     "service-worker.js": "/poly-remake/service-worker.js",
-    "static/css/main.3dcb7389.chunk.css.map": "/poly-remake/static/css/main.3dcb7389.chunk.css.map",
-    "static/js/2.5b24879c.chunk.js.LICENSE.txt": "/poly-remake/static/js/2.5b24879c.chunk.js.LICENSE.txt"
+    "static/css/main.2cb6747c.chunk.css.map": "/poly-remake/static/css/main.2cb6747c.chunk.css.map",
+    "static/js/2.69632c7b.chunk.js.LICENSE.txt": "/poly-remake/static/js/2.69632c7b.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.d4fa136c.js",
-    "static/js/2.5b24879c.chunk.js",
-    "static/css/main.3dcb7389.chunk.css",
-    "static/js/main.6d523213.chunk.js"
+    "static/js/2.69632c7b.chunk.js",
+    "static/css/main.2cb6747c.chunk.css",
+    "static/js/main.40a6b085.chunk.js"
   ]
 }
