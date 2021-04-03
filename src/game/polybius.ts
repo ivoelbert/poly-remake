@@ -13,6 +13,7 @@ import { FollowMissileManager } from './objects/followMissile/manager';
 import { ShotManager } from './objects/shots/manager';
 import { PolyCollider, Groups } from './collider';
 import { ExplosionsManager } from './objects/explosion/manager';
+import { SilentSoundManager, SoundManager } from './soundManager';
 
 export class Polybius {
     private renderer: PolyRenderer;
@@ -28,6 +29,7 @@ export class Polybius {
     private missiles: FollowMissileManager;
     private shots: ShotManager;
     private collider: PolyCollider;
+    private sounds: SoundManager;
 
     constructor() {
         // Set up the scene
@@ -43,6 +45,11 @@ export class Polybius {
         this.collider.addRule(Groups.shots, Groups.center);
         this.collider.addRule(Groups.shots, Groups.missiles);
         this.collider.addRule(Groups.missiles, Groups.ship);
+
+        /**
+         * TODO: iron out sounds and use the ToneSoundManager
+         */
+        this.sounds = new SilentSoundManager();
 
         this.explosions = new ExplosionsManager(this.scene, this.clock);
 
@@ -77,7 +84,7 @@ export class Polybius {
             this.collider,
             this.explosions
         );
-        this.shots = new ShotManager(this.scene, this.collider, this.clock);
+        this.shots = new ShotManager(this.scene, this.collider, this.clock, this.sounds);
 
         /**
          * TODO: iron out the orientation controls and figure out what controls to use
@@ -109,6 +116,7 @@ export class Polybius {
         this.asteroids.dispose();
         this.missiles.dispose();
         this.explosions.dispose();
+        this.sounds.dispose();
 
         this.scene.dispose();
         window.removeEventListener('resize', this.resize);

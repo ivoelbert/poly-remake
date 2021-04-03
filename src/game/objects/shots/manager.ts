@@ -7,6 +7,7 @@ import { Manager } from '../manager';
 import { ShotMeshFactory } from './meshFactory';
 import { PolyCollider, Groups } from '../../collider';
 import { PolyClock } from '../../clock/PolyClock';
+import { SoundManager } from '../../soundManager';
 
 export class ShotManager implements Manager<Shot> {
     private idleObjects: Set<Shot>;
@@ -15,7 +16,8 @@ export class ShotManager implements Manager<Shot> {
     constructor(
         private scene: PolyScene,
         private collider: PolyCollider,
-        private clock: PolyClock
+        private clock: PolyClock,
+        private sounds: SoundManager
     ) {
         this.idleObjects = new Set();
         this.liveObjects = new Set();
@@ -41,6 +43,8 @@ export class ShotManager implements Manager<Shot> {
         objectToSpawn.spawn(position);
 
         this.collider.addObjectToGroup(objectToSpawn, Groups.shots);
+
+        this.sounds.playShot();
     };
 
     public drop = (objectToDelete: Shot) => {
