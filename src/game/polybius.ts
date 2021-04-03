@@ -18,7 +18,7 @@ export class Polybius {
     private renderer: PolyRenderer;
     private clock: PolyClock;
     private camera: FollowCamera;
-    private controls: KeyboardControls;
+    private keyboardControls: KeyboardControls;
     private objectController: ObjectController;
     private center: Center;
     private ship: PolyShip;
@@ -79,9 +79,13 @@ export class Polybius {
         );
         this.shots = new ShotManager(this.scene, this.collider, this.clock);
 
-        this.controls = new KeyboardControls();
+        /**
+         * TODO: iron out the orientation controls and figure out what controls to use
+         * or provide a way to use both.
+         */
+        this.keyboardControls = new KeyboardControls();
         this.objectController = new ObjectController(
-            this.controls,
+            this.keyboardControls,
             this.ship.mesh,
             this.shots,
             this.clock
@@ -89,7 +93,7 @@ export class Polybius {
     }
 
     public start = (): void => {
-        this.controls.attachListeners();
+        this.keyboardControls.attachListeners();
         window.addEventListener('resize', this.resize);
 
         this.asteroids.start();
@@ -101,7 +105,7 @@ export class Polybius {
     };
 
     public dispose = (): void => {
-        this.controls.dispose();
+        this.keyboardControls.dispose();
         this.asteroids.dispose();
         this.missiles.dispose();
         this.explosions.dispose();
@@ -122,7 +126,6 @@ export class Polybius {
 
     // This function represents a frame. It's called once for every frame.
     private animate = (): void => {
-        requestAnimationFrame(this.animate);
         this.clock.tick();
 
         this.objectController.update();
@@ -138,5 +141,6 @@ export class Polybius {
 
         this.camera.update();
         this.renderer.render();
+        requestAnimationFrame(this.animate);
     };
 }

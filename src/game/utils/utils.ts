@@ -94,3 +94,9 @@ export const noop = () => {};
 export const getOne = <T>(set: Set<T>): T | nil => {
     return set.values().next().value;
 };
+
+export const debug = (info: string): void => {
+    const debugElement = assertExists(document.getElementById('debug-element'));
+    debugElement.style.display = 'block';
+    debugElement.textContent = info;
+};

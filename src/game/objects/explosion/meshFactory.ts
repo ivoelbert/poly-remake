@@ -15,17 +15,20 @@ export class ExplosionMeshFactory {
 
         const groupMesh = new THREE.Mesh();
 
-        const initialPositions = new THREE.SphereGeometry(0.1, 6, 6).vertices;
+        const initialPositions = new THREE.SphereGeometry(0.1, 6, 6).getAttribute('position');
 
-        initialPositions.forEach((initialPosition) => {
+        for (let i = 0; i < initialPositions.count; i++) {
+            const x = initialPositions.getX(i);
+            const y = initialPositions.getY(i);
+            const z = initialPositions.getZ(i);
             const fragmentSize = randFloat(CENTER_RADIUS * 0.05, CENTER_RADIUS * 0.2);
             const fragmentGeometry = new THREE.TetrahedronBufferGeometry(fragmentSize);
 
             const fragmentMesh = new THREE.Mesh(fragmentGeometry, fragmentMaterial);
-            fragmentMesh.position.copy(initialPosition);
+            fragmentMesh.position.set(x, y, z);
 
             groupMesh.add(fragmentMesh);
-        });
+        }
 
         const rotationAngle = randFloat(0, 2 * Math.PI);
         groupMesh.rotateOnAxis(randomUnitVector(), rotationAngle);

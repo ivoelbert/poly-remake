@@ -2,7 +2,7 @@ import * as THREE from 'three';
 
 export class ShotMeshFactory {
     private mesh: THREE.Mesh;
-    private hitboxGeometry: THREE.Geometry | THREE.BufferGeometry;
+    private hitboxGeometry: THREE.BufferGeometry;
 
     constructor() {
         const coreGeometry = new THREE.DodecahedronBufferGeometry(0.15);
@@ -24,10 +24,10 @@ export class ShotMeshFactory {
     }
 
     public buildMesh = (): THREE.Mesh => {
-        return this.mesh.clone();
+        return this.mesh.clone() as THREE.Mesh;
     };
 
-    public getHitboxGeometry = (): THREE.Geometry | THREE.BufferGeometry => {
+    public getHitboxGeometry = (): THREE.BufferGeometry => {
         return this.hitboxGeometry.clone();
     };
 }

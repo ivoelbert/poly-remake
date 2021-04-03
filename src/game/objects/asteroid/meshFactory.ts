@@ -2,7 +2,7 @@ import * as THREE from 'three';
 
 export class AsteroidMeshFactory {
     private mesh: THREE.Mesh;
-    private hitboxGeometry: THREE.Geometry | THREE.BufferGeometry;
+    private hitboxGeometry: THREE.BufferGeometry;
 
     constructor() {
         this.hitboxGeometry = new THREE.DodecahedronBufferGeometry(1.5);
@@ -15,10 +15,10 @@ export class AsteroidMeshFactory {
     }
 
     public buildMesh = (): THREE.Mesh => {
-        return this.mesh.clone();
+        return this.mesh.clone() as THREE.Mesh;
     };
 
-    public getHitboxGeometry = (): THREE.Geometry | THREE.BufferGeometry => {
+    public getHitboxGeometry = (): THREE.BufferGeometry => {
         return this.hitboxGeometry.clone();
     };
 }

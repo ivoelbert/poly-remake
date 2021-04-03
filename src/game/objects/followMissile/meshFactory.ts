@@ -2,7 +2,7 @@ import * as THREE from 'three';
 
 export class MissileMeshFactory {
     private mesh: THREE.Mesh;
-    private hitboxGeometry: THREE.Geometry | THREE.BufferGeometry;
+    private hitboxGeometry: THREE.BufferGeometry;
 
     constructor() {
         this.hitboxGeometry = new THREE.CylinderBufferGeometry(0.2, 0.4, 1, 6, 1);
@@ -36,10 +36,10 @@ export class MissileMeshFactory {
     }
 
     public buildMesh = (): THREE.Mesh => {
-        return this.mesh.clone();
+        return this.mesh.clone() as THREE.Mesh;
     };
 
-    public getHitboxGeometry = (): THREE.Geometry | THREE.BufferGeometry => {
+    public getHitboxGeometry = (): THREE.BufferGeometry => {
         return this.hitboxGeometry.clone();
     };
 }

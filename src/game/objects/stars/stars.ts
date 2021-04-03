@@ -51,21 +51,21 @@ export class Stars {
         });
     }
 
-    private createStarsGeometry = (): THREE.Geometry => {
-        const starsGeometry = new THREE.Geometry();
+    private createStarsGeometry = (): THREE.BufferGeometry => {
+        const starsGeometry = new THREE.BufferGeometry();
 
+        const vertices: number[] = [];
         repeat(1000, (i: number) => {
-            const vertex = new THREE.Vector3(
-                MathUtils.randFloat(-1, 1),
-                MathUtils.randFloat(-1, 1),
-                MathUtils.randFloat(-1, 1)
-            );
             const distance = MathUtils.randFloat(CENTER_RADIUS * 20, CENTER_RADIUS * 100);
-            vertex.multiplyScalar(distance);
 
-            starsGeometry.vertices.push(vertex);
+            vertices.push(
+                MathUtils.randFloat(-1, 1) * distance,
+                MathUtils.randFloat(-1, 1) * distance,
+                MathUtils.randFloat(-1, 1) * distance
+            );
         });
 
+        starsGeometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
         return starsGeometry;
     };
 }

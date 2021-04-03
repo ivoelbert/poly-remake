@@ -11,12 +11,13 @@
         "@types/node": "^12.0.0",
         "@types/react": "^16.9.0",
         "@types/react-dom": "^16.9.0",
+        "@types/three": "^0.126.2",
         "acorn": "^7.1.1",
         "node-sass": "^4.14.0",
         "react": "^16.13.1",
         "react-dom": "^16.13.1",
         "react-scripts": "3.4.1",
-        "three": "^0.115.0",
+        "three": "^0.127.0",
         "typescript": "~3.7.2"
     },
     "scripts": {

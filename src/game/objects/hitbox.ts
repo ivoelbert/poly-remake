@@ -11,10 +11,7 @@ export class PolyHitbox implements Hitbox {
     readonly shape: THREE.Sphere;
     private hitboxDebug: THREE.Mesh | null;
 
-    constructor(
-        private followedObject: THREE.Object3D,
-        geometry: THREE.Geometry | THREE.BufferGeometry
-    ) {
+    constructor(private followedObject: THREE.Object3D, geometry: THREE.BufferGeometry) {
         const internalGeometry = geometry.clone();
         internalGeometry.computeBoundingSphere();
         this.shape = assertExists(internalGeometry.boundingSphere);

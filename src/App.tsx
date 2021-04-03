@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
-import { usePolybius } from './hooks/usePolybius';
+import * as React from 'react';
 import './App.scss';
 
+const GameComponent = React.lazy(() => import('./GameComponent'));
+
 export function App() {
-    const [isPlaying, setIsPlaying] = useState(false);
+    const [isPlaying, setIsPlaying] = React.useState(false);
     const startGame = () => {
         setIsPlaying(true);
     };
@@ -15,10 +16,16 @@ export function App() {
     return <StartScreen startGame={startGame} />;
 }
 
-function Game() {
-    const polybiusRef = usePolybius();
+function LoadingScreen() {
+    return <div className="start-screen">loading</div>;
+}
 
-    return <div className="game-container" ref={polybiusRef} />;
+function Game() {
+    return (
+        <React.Suspense fallback={<LoadingScreen />}>
+            <GameComponent />
+        </React.Suspense>
+    );
 }
 
 interface StartScreenProps {
@@ -26,9 +33,18 @@ interface StartScreenProps {
 }
 
 function StartScreen(props: StartScreenProps) {
+    const startGame = async () => {
+        const deviceMotionEvent = DeviceMotionEvent as any;
+        if (deviceMotionEvent && typeof deviceMotionEvent.requestPermission === 'function') {
+            await deviceMotionEvent.requestPermission();
+        }
+
+        props.startGame();
+    };
+
     return (
         <div className="start-screen">
-            <button onClick={props.startGame}>Start</button>
+            <button onClick={startGame}>Start</button>
         </div>
     );
 }
