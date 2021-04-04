@@ -1,22 +1,27 @@
 {
   "files": {
-    "main.css": "/poly-remake/static/css/main.2cb6747c.chunk.css",
-    "main.js": "/poly-remake/static/js/main.40a6b085.chunk.js",
-    "main.js.map": "/poly-remake/static/js/main.40a6b085.chunk.js.map",
-    "runtime-main.js": "/poly-remake/static/js/runtime-main.d4fa136c.js",
-    "runtime-main.js.map": "/poly-remake/static/js/runtime-main.d4fa136c.js.map",
-    "static/js/2.69632c7b.chunk.js": "/poly-remake/static/js/2.69632c7b.chunk.js",
-    "static/js/2.69632c7b.chunk.js.map": "/poly-remake/static/js/2.69632c7b.chunk.js.map",
+    "main.css": "/poly-remake/static/css/main.1620a1d7.chunk.css",
+    "main.js": "/poly-remake/static/js/main.dde88151.chunk.js",
+    "main.js.map": "/poly-remake/static/js/main.dde88151.chunk.js.map",
+    "runtime-main.js": "/poly-remake/static/js/runtime-main.36971d6f.js",
+    "runtime-main.js.map": "/poly-remake/static/js/runtime-main.36971d6f.js.map",
+    "static/js/2.9f278589.chunk.js": "/poly-remake/static/js/2.9f278589.chunk.js",
+    "static/js/2.9f278589.chunk.js.map": "/poly-remake/static/js/2.9f278589.chunk.js.map",
+    "static/js/3.d7a95fae.chunk.js": "/poly-remake/static/js/3.d7a95fae.chunk.js",
+    "static/js/3.d7a95fae.chunk.js.map": "/poly-remake/static/js/3.d7a95fae.chunk.js.map",
+    "static/js/4.8c52b94e.chunk.js": "/poly-remake/static/js/4.8c52b94e.chunk.js",
+    "static/js/4.8c52b94e.chunk.js.map": "/poly-remake/static/js/4.8c52b94e.chunk.js.map",
     "index.html": "/poly-remake/index.html",
-    "precache-manifest.d3469563e61eb90991e64528f4edf6b8.js": "/poly-remake/precache-manifest.d3469563e61eb90991e64528f4edf6b8.js",
+    "precache-manifest.cd82f870cf2e57671a2f90acdf9769a9.js": "/poly-remake/precache-manifest.cd82f870cf2e57671a2f90acdf9769a9.js",
     "service-worker.js": "/poly-remake/service-worker.js",
-    "static/css/main.2cb6747c.chunk.css.map": "/poly-remake/static/css/main.2cb6747c.chunk.css.map",
-    "static/js/2.69632c7b.chunk.js.LICENSE.txt": "/poly-remake/static/js/2.69632c7b.chunk.js.LICENSE.txt"
+    "static/css/main.1620a1d7.chunk.css.map": "/poly-remake/static/css/main.1620a1d7.chunk.css.map",
+    "static/js/2.9f278589.chunk.js.LICENSE.txt": "/poly-remake/static/js/2.9f278589.chunk.js.LICENSE.txt",
+    "static/js/3.d7a95fae.chunk.js.LICENSE.txt": "/poly-remake/static/js/3.d7a95fae.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
-    "static/js/runtime-main.d4fa136c.js",
-    "static/js/2.69632c7b.chunk.js",
-    "static/css/main.2cb6747c.chunk.css",
-    "static/js/main.40a6b085.chunk.js"
+    "static/js/runtime-main.36971d6f.js",
+    "static/js/3.d7a95fae.chunk.js",
+    "static/css/main.1620a1d7.chunk.css",
+    "static/js/main.dde88151.chunk.js"
   ]
 }
