@@ -2,12 +2,13 @@ import * as THREE from 'three';
 import { PolyObject } from '../polyObject';
 import { MAX_RADIUS } from '../../constants';
 import { PolyHitbox } from '../hitbox';
+import { EffectsManager } from '../../effects';
 
 export class PolyShip implements PolyObject {
     public mesh: THREE.Object3D;
     public hitbox: PolyHitbox;
 
-    constructor() {
+    constructor(private effects: EffectsManager) {
         const geometry = this.createGeometry();
 
         const material = new THREE.MeshBasicMaterial({
@@ -26,7 +27,7 @@ export class PolyShip implements PolyObject {
     };
 
     public onCollide = (who: PolyObject): void => {
-        console.log('OH SHIT!');
+        this.effects.glitch();
     };
 
     private createGeometry = (): THREE.BufferGeometry => {

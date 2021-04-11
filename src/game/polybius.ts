@@ -14,6 +14,7 @@ import { ShotManager } from './objects/shots/manager';
 import { PolyCollider, Groups } from './collider';
 import { ExplosionsManager } from './objects/explosion/manager';
 import { SilentSoundManager, SoundManager } from './soundManager';
+import { EffectsManager } from './effects';
 
 export class Polybius {
     private renderer: PolyRenderer;
@@ -24,6 +25,7 @@ export class Polybius {
     private center: Center;
     private ship: PolyShip;
     private scene: PolyScene;
+    private effects: EffectsManager;
     private explosions: ExplosionsManager;
     private asteroids: AsteroidManager;
     private missiles: FollowMissileManager;
@@ -34,6 +36,12 @@ export class Polybius {
     constructor() {
         // Set up the scene
         this.scene = new PolyScene();
+
+        // Set up camera
+        this.camera = new FollowCamera();
+
+        // Set up the renderer
+        this.renderer = new PolyRenderer();
 
         // Set up the clock
         this.clock = new PolyClock();
@@ -53,16 +61,14 @@ export class Polybius {
 
         this.explosions = new ExplosionsManager(this.scene, this.clock);
 
+        this.effects = new EffectsManager(this.renderer, this.scene, this.camera);
+        this.effects.resize();
+
         // Set up the ship
-        this.ship = new PolyShip();
+        this.ship = new PolyShip(this.effects);
         this.collider.addObjectToGroup(this.ship, Groups.ship);
 
-        // Set up camera
-        this.camera = new FollowCamera(this.ship.mesh);
-
-        // Set up the renderer
-        this.renderer = new PolyRenderer(this.scene.scene, this.camera);
-        this.renderer.resize();
+        this.camera.follow(this.ship.mesh);
 
         // Set up various objects and managers
         const stars = new Stars();
@@ -99,7 +105,7 @@ export class Polybius {
         );
     }
 
-    public start = (): void => {
+    start = (): void => {
         this.keyboardControls.attachListeners();
         window.addEventListener('resize', this.resize);
 
@@ -111,7 +117,7 @@ export class Polybius {
         this.animate();
     };
 
-    public dispose = (): void => {
+    dispose = (): void => {
         this.keyboardControls.dispose();
         this.asteroids.dispose();
         this.missiles.dispose();
@@ -122,12 +128,12 @@ export class Polybius {
         window.removeEventListener('resize', this.resize);
     };
 
-    public getDomElement = (): HTMLCanvasElement => {
+    getDomElement = (): HTMLCanvasElement => {
         return this.renderer.getDomElement();
     };
 
     private resize = (): void => {
-        this.renderer.resize();
+        this.effects.resize();
         this.camera.aspect = window.innerWidth / window.innerHeight;
         this.camera.updateProjectionMatrix();
     };
@@ -148,7 +154,7 @@ export class Polybius {
         this.collider.update();
 
         this.camera.update();
-        this.renderer.render();
+        this.effects.render();
         requestAnimationFrame(this.animate);
     };
 }

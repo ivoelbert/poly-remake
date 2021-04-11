@@ -100,3 +100,6 @@ export const debug = (info: string): void => {
     debugElement.style.display = 'block';
     debugElement.textContent = info;
 };
+
+export type CancelAction = () => void;
+export type VoidCallback = () => void;
